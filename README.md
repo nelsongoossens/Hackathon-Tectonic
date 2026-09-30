@@ -65,18 +65,23 @@ Use a recent Node.js LTS release with npm. No database setup or API keys are req
 ```bash
 npm install
 cp .env.example .env.local
-# Set DEMO_PASSWORD and STAFF_PASSWORD in .env.local (at least 10 characters each).
 npm run dev
 ```
 
 On Windows PowerShell, use `Copy-Item .env.example .env.local` for the copy step. Open [localhost:3000](http://localhost:3000).
 
-| Login | Password configured locally | View |
-|---|---|---|
-| `analyst` | `STAFF_PASSWORD` | Staff control room at `/control` |
-| `emma`, `sam`, `jef` | `DEMO_PASSWORD` | That customer's app at `/app` |
+### Demo logins
 
-Choose your own passwords; do not commit them or publish them in the README. The staff control room includes a customer preview for demonstrating interactions.
+The copied `.env.example` already contains the demo passwords below, so the logins work as soon as the server starts. All four accounts are synthetic; the passwords are throwaway demo values that protect nothing outside this prototype. Change `DEMO_PASSWORD` and `STAFF_PASSWORD` in `.env.local` (at least 10 characters each) if you host the demo anywhere public.
+
+| Username | Password | Role | Where it lands |
+|---|---|---|---|
+| `analyst` | `staff-NBd_Gx_u9f3h` | Staff | Control room at `/control`: timeline, client model, silence log, advisor queue, scale benchmark and a customer preview |
+| `emma` | `demo-eecTWVMK_Q0C` | Customer | Emma's app at `/app` |
+| `sam` | `demo-eecTWVMK_Q0C` | Customer | Sam & Noor's app at `/app` |
+| `jef` | `demo-eecTWVMK_Q0C` | Customer | Jef's app at `/app`, voice channel |
+
+Start with `analyst` for the walkthrough below; the control room includes a customer preview, so a single login shows the whole loop. Log in as a customer to see the moments exactly as the app delivers them.
 
 Optional integrations are configured in `.env.local`: `ANTHROPIC_API_KEY` enables Claude, `ANTHROPIC_MODEL` selects the model, and `ELEVENLABS_API_KEY` enables voice synthesis. Without keys, the app uses heuristic sensemaking and browser speech where supported. `LLM_DISABLED=1` forces the offline path. See [.env.example](.env.example) for configuration names without secret values.
 
@@ -125,9 +130,29 @@ The participant guide (submission and fair-play sections) requires a short READM
 
 | Deliverable | Available material / status |
 |---|---|
-| Short project description | The opening project summary above can be used in Builderbase. |
+| Short project description | The [Builderbase description](#builderbase-description) below. |
 | Demo video **under 3 minutes** | Coming soon; final video/link pending Nelson's commit. |
 | Public GitHub repository | [Hackathon-Tectonic](https://github.com/nelsongoossens/Hackathon-Tectonic); public accessibility must be checked for submission. |
-| Aikido **before and after** screenshots | [Existing audit screenshot](docs/aikido-audit.png) shows findings; a confirmed after screenshot is not present. |
+| Aikido **before and after** screenshots | Before: [AI Code Audit findings](docs/aikido-audit.png). After: [scan following the fixes](docs/aikido-code-security-scan.png). |
 
 Submit through Builderbase, check that judges can access every submitted link, and keep the repository public until judging ends. The guide prohibits code or submission edits after final submission. Security accounts for 10% of the assessment; the other judging criteria are creativity, technical ability and fit to the challenge.
+
+### Builderbase description
+
+Copy the text below into the Builderbase description field.
+
+> **Kairos: a bank that earns the right to speak.**
+>
+> KBC already knows a great deal about its customers. The hard part is deciding which need matters today, whether the bank is sure enough to act, and when the most valuable response is silence. Kairos is a proof of concept for that judgement layer: the understanding and restraint engine that could sit behind an assistant like Kate and decide when it speaks.
+>
+> **How it understands.** Every customer gets an explainable client model with two tiers: facts drawn from transactions, recurring payments, income and savings, and an understanding tier of inferred needs, each stored with its source, confidence, evidence and date. Customers see their model and can confirm or reject any belief, so the bank's picture of them stays correctable.
+>
+> **How it responds.** Deterministic watchers scan events and only wake Claude for sensemaking when a pattern fires. Candidate moments come from a curated service graph that maps needs to real KBC help across budgeting, life changes, insurance and advice. An attention gate then scores customer value, confidence and urgency against interruption cost, with bank revenue excluded from the score. Each moment is delivered as a safe UI component in the app, as a spoken message through ElevenLabs, or routed to a human advisor. Anything that fails the test is written to a silence log with the reason, so restraint is auditable rather than accidental.
+>
+> **How it adapts.** Every answer, dismissal, correction and mute updates the client model and per-customer attention and trust ledgers. Customers can state intents in plain language ("warn me when groceries pass 400 euro"); Kairos compiles them into rules that code evaluates. Three synthetic customers show the same event producing different outcomes: Emma and Sam & Noor both get a puppy, but their trust histories decide whether a pet-insurance moment is shown or stays quiet. Jef, 71, receives help with a duplicate energy payment by voice and is routed to an advisor for an estate question.
+>
+> **How it scales.** Cheap watchers filter millions of events before any model call, so LLM cost is spent only where something changed. A synthetic benchmark measures watcher throughput and projects the approach to KBC's 2.3 million customers.
+>
+> **Security.** Customer data is scoped server-side from the session, never from client-supplied IDs. Sessions are httpOnly and SameSite=Strict, logins are rate-limited, request bodies and LLM outputs are schema-validated, and a Content Security Policy is set. The Aikido AI Code Audit findings were fixed and rescanned; screenshots are in the repository.
+>
+> Built with Next.js, TypeScript, Claude and ElevenLabs. Synthetic data only, no KBC integration.

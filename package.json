@@ -2,7 +2,7 @@
   "name": "kbc-moments",
   "version": "0.1.0",
   "private": true,
-  "description": "Moments: a bank that earns the right to speak. KBC challenge PoC for the Tectonic hackathon.",
+  "description": "Kairos: a bank that earns the right to speak. An explainable client model, curated service graph and attention gate that decide when KBC should help, route to an advisor, or stay silent. KBC challenge proof of concept for the Tectonic hackathon.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
