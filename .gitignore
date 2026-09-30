@@ -22,3 +22,6 @@ yarn-error.log*
 # teammate entries (kept from main)
 data/*.db
 data/audio/
+*.mp3
+*.wav
+video/*.mp4
