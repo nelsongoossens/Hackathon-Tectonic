@@ -18,3 +18,7 @@ next-env.d.ts
 
 npm-debug.log*
 yarn-error.log*
+
+# teammate entries (kept from main)
+data/*.db
+data/audio/
