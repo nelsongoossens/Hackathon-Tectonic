@@ -1,7 +1,24 @@
 .DS_Store
-.env
-.env.local
 node_modules/
 .next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets: never commit
+.env
+.env.local
+.env.*.local
+.env.production
+
+# runtime data (LLM cache, audio cache, interaction log)
+.data/
+
+npm-debug.log*
+yarn-error.log*
+
+# teammate entries (kept from main)
 data/*.db
 data/audio/
