@@ -8,8 +8,18 @@ import path from "node:path";
 const AUDIO_DIR = path.join(fs.realpathSync(process.cwd()), ".data", "audio");
 
 /** Cache entries must be regular files in the actual cache directory, never links. */
-function readCachedAudio(file: string): Buffer | null {
+function cachePath(hash: string): string | null {
+  // Only 32-char lowercase hex names, resolved strictly inside AUDIO_DIR.
+  if (!/^[a-f0-9]{32}$/.test(hash)) return null;
+  const file = path.resolve(AUDIO_DIR, `${hash}.mp3`);
+  if (path.dirname(file) !== AUDIO_DIR || path.basename(file) !== `${hash}.mp3`) return null;
+  return file;
+}
+
+function readCachedAudio(hash: string): Buffer | null {
   let fd: number | undefined;
+  const file = cachePath(hash);
+  if (!file) return null;
   try {
     if (fs.realpathSync(AUDIO_DIR) !== AUDIO_DIR) return null;
     const entry = fs.lstatSync(file);
@@ -36,8 +46,9 @@ export async function synthesize(text: string): Promise<Buffer | null> {
   const voiceId = (process.env.ELEVENLABS_VOICE_ID || "JBFqnCBsd6RMkjVDRZzb").replace(/[^A-Za-z0-9]/g, "");
   const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
   const hash = createHash("sha256").update(`${voiceId}|${model}|${text}`).digest("hex").slice(0, 32);
-  const file = path.join(AUDIO_DIR, `${hash}.mp3`);
-  const cached = readCachedAudio(file);
+  const file = cachePath(hash);
+  if (!file) return null;
+  const cached = readCachedAudio(hash);
   if (cached) return cached;
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
     method: "POST",
