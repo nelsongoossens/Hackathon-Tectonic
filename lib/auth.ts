@@ -1,7 +1,7 @@
 // Authentication and authorization. Demo users are synthetic; passwords come from
 // the environment (never from the repo). The customer id ALWAYS comes from the
 // server-side session, never from the request.
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -46,15 +46,24 @@ export function authConfigured(): boolean {
   return Boolean(passwordFor("staff") && passwordFor("customer"));
 }
 
-function hash(p: string): Buffer {
-  return scryptSync(p, st().salt, 32);
+/**
+ * Keyed digest so two strings of different length can be compared in constant
+ * time. Passwords are never stored, so no slow KDF is needed: a slow hash here
+ * would only hand an unauthenticated caller a cheap way to burn server CPU.
+ */
+function digest(p: string): Buffer {
+  return createHmac("sha256", st().salt).update(p).digest();
+}
+
+export function normalizeUsername(username: string): string {
+  return username.trim().toLowerCase();
 }
 
 /** Returns the user on success, null on bad credentials. Constant-time comparison. */
 export function verifyLogin(username: string, password: string): User | null {
-  const user = USERS.find((u) => u.username === username.trim().toLowerCase());
+  const user = USERS.find((u) => u.username === normalizeUsername(username));
   const expected = passwordFor(user?.role ?? "customer");
-  const ok = expected !== null && timingSafeEqual(hash(password), hash(expected));
+  const ok = expected !== null && timingSafeEqual(digest(password), digest(expected));
   return user && ok ? user : null;
 }
 
@@ -113,14 +122,33 @@ export function checkOrigin(req: Request): NextResponse | null {
   return null;
 }
 
+/**
+ * Key that identifies the caller for unauthenticated rate limits. Forwarded
+ * headers are only believed behind a proxy that sets them (TRUST_PROXY=1);
+ * otherwise anyone could pick a fresh "IP" per request and bypass the limit.
+ */
+export function clientKey(req: Request): string {
+  if (process.env.TRUST_PROXY === "1") {
+    const fwd = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+    if (fwd) return fwd.slice(0, 64);
+  }
+  return "shared";
+}
+
+const MAX_LIMIT_KEYS = 10_000;
+
 /** Fixed-window rate limit. Returns true when the call is allowed. */
 export function rateLimit(key: string, max: number, windowMs: number): boolean {
   const limits = st().limits;
   const now = Date.now();
   const e = limits.get(key);
   if (!e || e.reset < now) {
+    if (!e && limits.size >= MAX_LIMIT_KEYS) {
+      for (const [k, v] of limits) if (v.reset < now) limits.delete(k);
+      // Still full: attacker-chosen keys must not grow memory without bound, so drop the oldest.
+      while (limits.size >= MAX_LIMIT_KEYS) limits.delete(limits.keys().next().value as string);
+    }
     limits.set(key, { count: 1, reset: now + windowMs });
-    if (limits.size > 5000) for (const [k, v] of limits) if (v.reset < now) limits.delete(k);
     return true;
   }
   e.count++;

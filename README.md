@@ -103,10 +103,11 @@ The browser regression tests use installed Microsoft Edge on Windows and Playwri
 ## Security and privacy
 
 - Customer endpoints derive ownership from the server-side session; staff endpoints require the staff role. Foreign or unknown moment IDs are rejected.
-- Sessions use random 256-bit tokens, `httpOnly` cookies, `SameSite=Strict`, an eight-hour expiry and secure cookies in production. Passwords come from environment variables and use scrypt with constant-time comparison. Login and costly endpoints are rate-limited.
-- State-changing routes check supplied origins. API bodies and LLM outputs are schema-validated. Customer text is treated as data, rules are a JSON DSL, and UI content is rendered through allowed components.
+- Sessions use random 256-bit tokens, `httpOnly` cookies, `SameSite=Strict`, an eight-hour expiry and secure cookies in production. Passwords come from environment variables and are compared in constant time through a keyed digest (no slow KDF on the unauthenticated login path, so it cannot be used to burn CPU). Login is rate-limited per account and per client; forwarded IP headers are only trusted with `TRUST_PROXY=1`, and the limiter table is bounded.
+- State-changing routes check supplied origins. Request bodies are capped on bytes actually received (chunked uploads included). API bodies and LLM outputs are schema-validated. Customer text is treated as data, rules are a JSON DSL, and UI content is rendered through allowed components.
+- The customer API returns an allow-listed copy of each moment: gate scores, trust and attention ledgers, KBC value and template parameters never leave the server on `/api/me/*`.
 - Voice synthesis accepts owned moment text. Audio cache paths use hashes; cache access rejects symbolic links and linked directories, and writes use exclusive creation.
-- Local design previews use a restricted DOM renderer without string evaluation or raw HTML insertion. Security headers are set in [next.config.ts](next.config.ts).
+- Local design previews use a restricted DOM renderer without string evaluation or raw HTML insertion. A Content Security Policy and the other security headers are set in [next.config.ts](next.config.ts).
 - `.env.local`, runtime state and caches in `.data/` are gitignored. The prototype uses synthetic data only.
 
 ## Unfinished work and limitations

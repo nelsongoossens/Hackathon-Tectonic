@@ -3,6 +3,9 @@
 import { computeState } from "../lib/engine";
 import { TIMELINE_DAYS, customerSummaries } from "../lib/personas";
 import { heuristicCompile, finalizeRule } from "../lib/rules";
+import { toCustomerView } from "../lib/views";
+import { MAX_JSON_BYTES, readJson } from "../lib/routeHelpers";
+import { normalizeUsername, rateLimit } from "../lib/auth";
 import type { Interaction } from "../lib/types";
 
 let failures = 0;
@@ -64,6 +67,37 @@ async function main() {
   check("Offline compiler: discretionary €2,000/month", !("error" in r) && r.metric === "discretionary_spend" && r.threshold === 2000 && r.period === "month", JSON.stringify(r));
   const g = finalizeRule(heuristicCompile("tell me before I spend 150 euro a week on groceries"), "x", "heuristic", 10, "r2");
   check("Offline compiler: groceries €150/week warn at 80%", !("error" in g) && g.category === "groceries" && g.threshold === 150 && g.warnAt === 0.8, JSON.stringify(g));
+
+  // Customer API redaction: bank-internal scoring never reaches /api/me/*
+  const custView = toCustomerView(emma);
+  const leaked = ["kbcValue", "customerValue", "params", "signalId"];
+  const leakedDecision = ["score", "threshold", "breakdown", "trustAtDecision", "attentionLeft", "reason", "reasonText"];
+  check("Customer feed has shown moments", custView.feed.length > 0);
+  check(
+    "Customer feed strips internal candidate fields",
+    custView.feed.every((m) => leaked.every((k) => !(k in m.candidate))),
+  );
+  check(
+    "Customer feed strips gate score and ledgers",
+    custView.feed.every((m) => leakedDecision.every((k) => !(k in m.decision))),
+  );
+
+  // Body limit is enforced on received bytes, not on Content-Length
+  const chunked = (payload: string) =>
+    new Request("http://localhost/x", {
+      method: "POST",
+      body: new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode(payload)); c.close(); } }),
+      // @ts-expect-error duplex is required for streaming bodies in Node fetch
+      duplex: "half",
+    });
+  check("readJson parses a small chunked body", JSON.stringify(await readJson(chunked('{"a":1}'))) === '{"a":1}');
+  check("readJson rejects an oversized chunked body", (await readJson(chunked(`{"a":"${"x".repeat(MAX_JSON_BYTES)}"}`))) === null);
+  check("readJson rejects invalid JSON", (await readJson(chunked("{oops"))) === null);
+
+  // Login limiter: username variants share one bucket; limiter table cannot grow without bound
+  check("Username normalisation folds case and whitespace", normalizeUsername("  Emma ") === "emma");
+  for (let i = 0; i < 20_000; i++) rateLimit(`probe:${i}`, 1, 60_000);
+  check("Rate limiter table is bounded", ((globalThis as unknown as { __momentsAuth: { limits: Map<string, unknown> } }).__momentsAuth.limits.size) <= 10_000);
 
   console.log(failures ? `\n${failures} check(s) failed` : "\nAll checks passed");
   process.exit(failures ? 1 : 0);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import type { Belief, BeliefKey, CustomerSummary, InteractBody, Moment, Rule, Txn } from "@/lib/types";
+import type { Belief, BeliefKey, CustomerMoment, CustomerSummary, InteractBody, Rule, Txn } from "@/lib/types";
 import MomentCard from "./MomentCard";
 import { ConfidenceBar, DOMAIN_LABEL, DOMAIN_ORDER, SourceBadge, Spinner, cx, fmtDay, fmtEUR, fmtLongDate, groupBy } from "./ui";
 
@@ -10,7 +10,7 @@ export interface PhoneData {
   date: string;
   balance: number;
   recentTxns: Txn[];
-  feed: Moment[];
+  feed: CustomerMoment[];
   beliefs: Belief[];
   rules: Rule[];
   preferredChannel: "app" | "voice";

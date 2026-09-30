@@ -93,10 +93,8 @@ export default function CustomerApp() {
     <div className="custapp">
       <header className="custapp-bar">
         <span className="custapp-brand">
-          <span className="brand-mark" aria-hidden>
-            M
-          </span>
-          Moments
+          <img className="brand-mark" src="/kairos-logo.svg" alt="" aria-hidden />
+          Kairos
         </span>
         <span className="custapp-who">
           {view ? (

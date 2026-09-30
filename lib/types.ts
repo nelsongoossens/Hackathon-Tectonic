@@ -321,6 +321,20 @@ export interface StaffView {
   voice: { enabled: boolean };
 }
 
+/**
+ * A moment as the customer's app receives it. Bank-internal fields (KBC value,
+ * gate score and breakdown, trust and attention ledgers, template params) are
+ * stripped server-side; the customer only gets what the card renders plus the
+ * plain-language "why" trace.
+ */
+export type CustomerCandidate = Omit<Candidate, "kbcValue" | "customerValue" | "params" | "signalId">;
+export interface CustomerMoment {
+  candidate: CustomerCandidate;
+  decision: Pick<GateDecision, "outcome" | "channel">;
+  status: MomentStatus;
+  answerLabel?: string;
+}
+
 /** What the customer sees in the app. GET /api/me/state */
 export interface CustomerAppView {
   customer: CustomerSummary;
@@ -328,7 +342,7 @@ export interface CustomerAppView {
   date: string;
   balance: number;
   recentTxns: Txn[];
-  feed: Moment[]; // shown moments, newest first (includes answered ones, max 20)
+  feed: CustomerMoment[]; // shown moments, newest first (includes answered ones, max 20)
   beliefs: Belief[]; // "What KBC understands about me"
   rules: Rule[];
   preferredChannel: "app" | "voice";

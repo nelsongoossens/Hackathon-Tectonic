@@ -12,6 +12,7 @@ export const GATE = {
   baseCost: 0.08,
   costPerUse: 0.12,
   recentlyShownDays: 45,
+  recentlyShownDaysCommercial: 120, // repeating an offer is what makes a bank feel salesy
 };
 
 export interface GateContext {
@@ -43,7 +44,7 @@ export function decide(c: Candidate, ctx: GateContext, guardrailNote?: string): 
   if (ledgers.muted.includes(c.nodeId)) return silence("CATEGORY_MUTED", `Customer asked not to see "${c.nodeName}" moments.`);
   if (ctx.contradiction) return silence("DECLARED_CONTRADICTS", `Customer told us this isn't true ("${ctx.contradiction}"). What they declare beats what we infer.`);
   if (c.customerRequested) return { ...base, score: 1, outcome: "shown", channel, reasonText: "Customer asked for this rule, so it's always delivered and doesn't use the attention budget." };
-  if (ctx.lastShownDay !== undefined && c.day - ctx.lastShownDay < GATE.recentlyShownDays)
+  if (ctx.lastShownDay !== undefined && c.day - ctx.lastShownDay < (c.commercial ? GATE.recentlyShownDaysCommercial : GATE.recentlyShownDays))
     return silence("RECENTLY_SHOWN", `Already raised ${c.day - ctx.lastShownDay} days ago. Repeating it would be noise.`);
   if (c.confidence < GATE.minConfidence)
     return silence("LOW_CONFIDENCE", `Only ${pct(c.confidence)} sure. Not enough to interrupt someone (needs ${pct(GATE.minConfidence)}).`);

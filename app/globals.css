@@ -212,12 +212,8 @@ code,
   width: 30px;
   height: 30px;
   border-radius: 22%;
-  background: radial-gradient(circle at 50% 85%, #5a3424, #241a16 55%, #121212);
-  color: #faad7c;
-  font-weight: 800;
-  font-size: 15px;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(255, 75, 43, 0.25);
+  box-shadow: 0 4px 14px rgba(90, 52, 36, 0.3);
 }
 .brand-mark-lg {
   width: 46px;

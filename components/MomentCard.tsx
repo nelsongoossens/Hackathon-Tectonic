@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { InteractBody, Moment } from "@/lib/types";
+import type { CustomerMoment, InteractBody } from "@/lib/types";
 import { cx, fmtDay } from "./ui";
 
 interface Props {
-  moment: Moment;
+  moment: CustomerMoment;
   onInteract(body: InteractBody): Promise<void>;
   onVoice(momentId: string): Promise<Blob | null>;
   disabled?: boolean;
 }
 
-function resolvedText(m: Moment): string {
+function resolvedText(m: CustomerMoment): string {
   switch (m.status) {
     case "answered":
     case "engaged":
@@ -29,7 +29,7 @@ function resolvedText(m: Moment): string {
   }
 }
 
-const KIND_LABEL: Record<Moment["candidate"]["component"]["type"], string> = {
+const KIND_LABEL: Record<CustomerMoment["candidate"]["component"]["type"], string> = {
   info: "Info",
   confirm: "Confirm",
   choice: "Question",
@@ -37,7 +37,7 @@ const KIND_LABEL: Record<Moment["candidate"]["component"]["type"], string> = {
 };
 
 /** Aura tone: coral for helpful/urgent, teal for informational, grey once dismissed or silenced. */
-function auraTone(m: Moment): "hot" | "cool" | "still" {
+function auraTone(m: CustomerMoment): "hot" | "cool" | "still" {
   if (["dismissed", "ignored", "silenced"].includes(m.status)) return "still";
   if (m.status !== "open") return "cool";
   if (m.candidate.component.type === "info" || m.candidate.urgency < 0.5) return "cool";

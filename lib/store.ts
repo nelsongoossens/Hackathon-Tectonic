@@ -19,7 +19,11 @@ function store(): StoreShape {
   if (!g.__momentsStore) {
     let loaded: StoreShape = { interactions: {}, simDay: {} };
     try {
-      loaded = JSON.parse(fs.readFileSync(FILE, "utf8")) as StoreShape;
+      const raw = JSON.parse(fs.readFileSync(FILE, "utf8")) as Partial<StoreShape> | null;
+      // A damaged file must not turn every request into a crash: fall back to a clean store.
+      if (raw && typeof raw === "object" && raw.interactions && typeof raw.interactions === "object" && raw.simDay && typeof raw.simDay === "object") {
+        loaded = { interactions: raw.interactions, simDay: raw.simDay };
+      }
     } catch { /* first run */ }
     for (const id of personas().keys()) {
       loaded.interactions[id] ??= [];

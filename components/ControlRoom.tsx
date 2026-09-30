@@ -275,11 +275,9 @@ export default function ControlRoom() {
       {/* ---------- top bar ---------- */}
       <header className="cr-top">
         <div className="cr-brand">
-          <span className="brand-mark" aria-hidden>
-            M
-          </span>
+          <img className="brand-mark" src="/kairos-logo.svg" alt="" aria-hidden />
           <span>
-            <span className="cr-brand-name">Moments</span>
+            <span className="cr-brand-name">Kairos</span>
             <span className="cr-brand-sub">understanding layer behind Kate</span>
           </span>
         </div>

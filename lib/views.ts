@@ -1,6 +1,6 @@
 // Maps engine state to API views. The customer view deliberately leaves out the
 // bank-internal parts (silence log, scores, KBC value, advisor queue).
-import type { AdvisorItem, CompareView, CustomerAppView, StaffView } from "./types";
+import type { AdvisorItem, CompareView, CustomerAppView, CustomerMoment, Moment, StaffView } from "./types";
 import { computeState, type EngineState } from "./engine";
 import { TIMELINE_DAYS, customerSummaries, dayToISO, getPersona } from "./personas";
 import { getInteractions, getSimDay } from "./store";
@@ -33,6 +33,21 @@ export function toStaffView(s: EngineState): StaffView {
   };
 }
 
+/** Allow-list copy: only the fields the customer app renders leave the server. */
+export function toCustomerMoment(m: Moment): CustomerMoment {
+  const c = m.candidate;
+  return {
+    candidate: {
+      id: c.id, day: c.day, nodeId: c.nodeId, nodeName: c.nodeName, signalSummary: c.signalSummary,
+      kind: c.kind, commercial: c.commercial, guardrail: c.guardrail, confidence: c.confidence, urgency: c.urgency,
+      title: c.title, body: c.body, copyBy: c.copyBy, component: c.component, why: c.why, customerRequested: c.customerRequested,
+    },
+    decision: { outcome: m.decision.outcome, channel: m.decision.channel },
+    status: m.status,
+    ...(m.answerLabel !== undefined ? { answerLabel: m.answerLabel } : {}),
+  };
+}
+
 export function toCustomerView(s: EngineState): CustomerAppView {
   return {
     customer: s.persona.summary,
@@ -40,7 +55,7 @@ export function toCustomerView(s: EngineState): CustomerAppView {
     date: dayToISO(s.day),
     balance: s.facts.balance,
     recentTxns: s.txns.slice(-25).reverse(),
-    feed: s.moments.filter((m) => m.decision.outcome === "shown").reverse().slice(0, 20),
+    feed: s.moments.filter((m) => m.decision.outcome === "shown").reverse().slice(0, 20).map(toCustomerMoment),
     beliefs: s.beliefs,
     rules: s.rules,
     preferredChannel: s.persona.preferredChannel,

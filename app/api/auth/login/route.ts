@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { SESSION_COOKIE, authConfigured, checkOrigin, createSession, jsonError, rateLimit, sessionCookieOptions, verifyLogin } from "@/lib/auth";
+import { SESSION_COOKIE, authConfigured, checkOrigin, clientKey, createSession, jsonError, normalizeUsername, rateLimit, sessionCookieOptions, verifyLogin } from "@/lib/auth";
 import { readJson } from "@/lib/routeHelpers";
 
 export const dynamic = "force-dynamic";
@@ -12,10 +12,13 @@ export async function POST(req: Request) {
   if (!authConfigured()) return jsonError(503, "Server not configured: set DEMO_PASSWORD and STAFF_PASSWORD (10+ characters) in .env.local");
   const parsed = Body.safeParse(await readJson(req));
   if (!parsed.success) return jsonError(400, "Invalid request");
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
-  if (!rateLimit(`login:${ip}`, 10, 60_000) || !rateLimit(`login-user:${parsed.data.username.toLowerCase()}`, 8, 60_000))
+  // Per-account limit uses the same normalisation as verifyLogin, so " Emma" and "emma" share one bucket.
+  const username = normalizeUsername(parsed.data.username);
+  const client = clientKey(req);
+  const perClientMax = client === "shared" ? 30 : 10;
+  if (!rateLimit(`login:${client}`, perClientMax, 60_000) || !rateLimit(`login-user:${username}`, 8, 60_000))
     return jsonError(429, "Too many attempts. Wait a minute.");
-  const user = verifyLogin(parsed.data.username, parsed.data.password);
+  const user = verifyLogin(username, parsed.data.password);
   if (!user) return jsonError(401, "Wrong username or password");
   const res = NextResponse.json({ role: user.role }, { headers: { "Cache-Control": "no-store" } });
   res.cookies.set(SESSION_COOKIE, createSession(user), sessionCookieOptions());

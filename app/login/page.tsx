@@ -58,11 +58,9 @@ export default function LoginPage() {
       <div className="login-glow" aria-hidden />
       <div className="login-card">
         <div className="login-brand">
-          <span className="brand-mark brand-mark-lg" aria-hidden>
-            M
-          </span>
+          <img className="brand-mark brand-mark-lg" src="/kairos-logo.svg" alt="" aria-hidden />
           <div>
-            <h1>Moments</h1>
+            <h1>Kairos</h1>
             <p className="login-sub">A bank that earns the right to speak — KBC challenge PoC</p>
           </div>
         </div>
