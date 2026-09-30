@@ -133,7 +133,7 @@ The participant guide (submission and fair-play sections) requires a short READM
 | Short project description | The [Builderbase description](#builderbase-description) below. |
 | Demo video **under 3 minutes** | Coming soon; final video/link pending Nelson's commit. |
 | Public GitHub repository | [Hackathon-Tectonic](https://github.com/nelsongoossens/Hackathon-Tectonic); public accessibility must be checked for submission. |
-| Aikido **before and after** screenshots | Before: [AI Code Audit findings](docs/aikido-audit.png). After: [scan following the fixes](docs/aikido-code-security-scan.png). |
+| Aikido **before and after** screenshots | The AI Code Audit never completed on the Aikido platform: it stayed in the **Mapping** and **Scheduled** states for the whole hackathon, so no before-and-after audit result exists to show. What we do have: [the pending AI Code Audit page](docs/aikido-audit.png) and [the completed AI Code Security scan](docs/aikido-code-security-scan.png). |
 
 Submit through Builderbase, check that judges can access every submitted link, and keep the repository public until judging ends. The guide prohibits code or submission edits after final submission. Security accounts for 10% of the assessment; the other judging criteria are creativity, technical ability and fit to the challenge.
 
@@ -153,6 +153,6 @@ Copy the text below into the Builderbase description field.
 >
 > **How it scales.** Cheap watchers filter millions of events before any model call, so LLM cost is spent only where something changed. A synthetic benchmark measures watcher throughput and projects the approach to KBC's 2.3 million customers.
 >
-> **Security.** Customer data is scoped server-side from the session, never from client-supplied IDs. Sessions are httpOnly and SameSite=Strict, logins are rate-limited, request bodies and LLM outputs are schema-validated, and a Content Security Policy is set. The Aikido AI Code Audit findings were fixed and rescanned; screenshots are in the repository.
+> **Security.** Customer data is scoped server-side from the session, never from client-supplied IDs. Sessions are httpOnly and SameSite=Strict, logins are rate-limited, request bodies and LLM outputs are schema-validated, and a Content Security Policy is set. A note on the Aikido deliverable: we connected the repository and started the AI Code Audit, but on the platform it never got past the "Mapping" and "Scheduled" states, so we could not obtain before-and-after audit results to show you. We ran Aikido's Code Security scan instead and did our own review against the audit's categories (IDOR, authentication, authorization and business-logic flaws); the security section of the README lists the resulting hardening, and the screenshots of the pending audit and the completed scan are in the repository.
 >
 > Built with Next.js, TypeScript, Claude and ElevenLabs. Synthetic data only, no KBC integration.
