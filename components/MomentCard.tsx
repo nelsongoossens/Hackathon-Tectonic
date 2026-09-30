@@ -29,6 +29,21 @@ function resolvedText(m: Moment): string {
   }
 }
 
+const KIND_LABEL: Record<Moment["candidate"]["component"]["type"], string> = {
+  info: "Info",
+  confirm: "Confirm",
+  choice: "Question",
+  slider: "Set amount",
+};
+
+/** Aura tone: coral for helpful/urgent, teal for informational, grey once dismissed or silenced. */
+function auraTone(m: Moment): "hot" | "cool" | "still" {
+  if (["dismissed", "ignored", "silenced"].includes(m.status)) return "still";
+  if (m.status !== "open") return "cool";
+  if (m.candidate.component.type === "info" || m.candidate.urgency < 0.5) return "cool";
+  return "hot";
+}
+
 export default function MomentCard({ moment, onInteract, onVoice, disabled }: Props) {
   const c = moment.candidate;
   const id = c.id;
@@ -38,29 +53,18 @@ export default function MomentCard({ moment, onInteract, onVoice, disabled }: Pr
 
   const [pending, setPending] = useState(false);
   const [showWhy, setShowWhy] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [slider, setSlider] = useState<number>(spec.type === "slider" ? spec.value : 0);
   const [playing, setPlaying] = useState(false);
   const [loadingAudio, setLoadingAudio] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const urlRef = useRef<string | null>(null);
   const speakingRef = useRef(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // keep slider default in sync if the server re-renders the spec
   const specValue = spec.type === "slider" ? spec.value : null;
   useEffect(() => {
     if (specValue !== null) setSlider(specValue);
   }, [specValue]);
-
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [menuOpen]);
 
   useEffect(() => () => stopAudio(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -124,7 +128,6 @@ export default function MomentCard({ moment, onInteract, onVoice, disabled }: Pr
   async function act(body: InteractBody) {
     if (pending || disabled) return;
     setPending(true);
-    setMenuOpen(false);
     try {
       await onInteract(body);
     } finally {
@@ -186,14 +189,13 @@ export default function MomentCard({ moment, onInteract, onVoice, disabled }: Pr
       case "slider":
         actions = (
           <div className="mc-slider">
-            <div className="mc-slider-head">
-              <span>{spec.label}</span>
-              <strong>
-                {spec.unit === "€" || spec.unit === "EUR" ? `€ ${slider}` : `${slider} ${spec.unit}`}
-              </strong>
+            <div className="mc-slider-head">{spec.label}</div>
+            <div className="mc-slider-amt">
+              {spec.unit === "€" || spec.unit === "EUR" ? `€${slider.toLocaleString("en-GB")}` : `${slider} ${spec.unit}`}
             </div>
             <input
               type="range"
+              style={{ ["--fill" as string]: `${((slider - spec.min) / Math.max(1, spec.max - spec.min)) * 100}%` }}
               min={spec.min}
               max={spec.max}
               step={spec.step}
@@ -220,86 +222,74 @@ export default function MomentCard({ moment, onInteract, onVoice, disabled }: Pr
     }
   }
 
+  const tone = auraTone(moment);
+  const auraSize = Math.round(200 + 90 * Math.min(1, c.urgency));
+  const conf = Math.round(c.confidence * 100);
+  const kind = isVoice ? "Voice" : KIND_LABEL[spec.type];
+
   return (
-    <article className={cx("mc", !isOpen && "mc-resolved", isVoice && "mc-voice")}>
+    <article className={cx("mc", `mc-${tone}`, !isOpen && "mc-resolved", isVoice && "mc-voice")}>
+      <span className="mc-aura" style={{ width: auraSize, height: auraSize }} aria-hidden />
+      <span className="mc-grain" aria-hidden />
       <header className="mc-head">
-        <span className={cx("mc-tag", c.commercial ? "mc-tag-offer" : "mc-tag-tip")}>{c.commercial ? "Offer" : "Tip"}</span>
-        {c.customerRequested && <span className="mc-tag mc-tag-rule">Your rule</span>}
-        <span className="mc-date">{fmtDay(c.day)}</span>
-        <div className="mc-menu" ref={menuRef}>
-          <button
-            type="button"
-            className="mc-menu-btn"
-            aria-label="More options"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((o) => !o)}
-          >
-            ⋯
-          </button>
-          {menuOpen && (
-            <div className="mc-menu-pop" role="menu">
-              <button type="button" role="menuitem" disabled={locked} onClick={() => act({ type: "mute", nodeId: c.nodeId })}>
-                Don&apos;t show me these
-              </button>
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setShowWhy(true);
-                  setMenuOpen(false);
-                }}
-              >
-                Why am I seeing this?
-              </button>
-            </div>
-          )}
-        </div>
+        <span className="mc-pill">
+          {kind} · {c.nodeName}
+        </span>
+        {c.commercial && <span className="mc-pill mc-pill-offer">Offer</span>}
+        {c.customerRequested && <span className="mc-pill mc-pill-rule">Your rule</span>}
+        <span className="mc-pill mc-pill-muted">{isOpen ? `Conf ${conf}%` : fmtDay(c.day)}</span>
       </header>
 
-      {isVoice && (
-        <div className="mc-voicebar">
-          <button
-            type="button"
-            className={cx("mc-play", playing && "is-playing")}
-            onClick={play}
-            disabled={loadingAudio}
-            aria-label={playing ? "Stop voice message" : "Play voice message"}
-          >
-            {loadingAudio ? <span className="spinner spinner-light" style={{ width: 14, height: 14 }} /> : playing ? "❚❚" : "▶"}
-          </button>
-          <div className="mc-voice-meta">
-            <span className="mc-voice-title">Voice message from KBC</span>
+      <div className="mc-glass">
+        {isVoice && (
+          <div className="mc-voicebar">
             <span className={cx("mc-wave", playing && "is-playing")} aria-hidden>
               {Array.from({ length: 22 }, (_, i) => (
-                <i key={i} style={{ height: `${30 + ((i * 37) % 70)}%`, animationDelay: `${(i % 7) * 0.09}s` }} />
+                <i key={i} style={{ height: `${18 + ((i * 37) % 82)}%`, animationDelay: `${(i % 7) * 0.09}s` }} />
               ))}
             </span>
+            <div className="mc-voice-row">
+              <button
+                type="button"
+                className={cx("mc-play", playing && "is-playing")}
+                onClick={play}
+                disabled={loadingAudio}
+                aria-label={playing ? "Stop voice message" : "Play voice message"}
+              >
+                {loadingAudio ? <span className="spinner spinner-light" style={{ width: 14, height: 14 }} /> : playing ? "❚❚" : "▶"}
+              </button>
+              <span className="mc-voice-title">
+                {playing ? "Playing…" : "Voice message from KBC."}
+                <br />
+                Tap to listen.
+              </span>
+            </div>
           </div>
-        </div>
-      )}
-
-      <h3 className="mc-title">{c.title}</h3>
-      <p className={cx("mc-body", isVoice && "mc-transcript")}>{c.body}</p>
-
-      {isOpen ? actions : <div className={cx("mc-resolved-label", `mc-st-${moment.status}`)}>{resolvedText(moment)}</div>}
-
-      <footer className="mc-foot">
-        <button type="button" className="mc-link" onClick={() => setShowWhy((s) => !s)} aria-expanded={showWhy}>
-          {showWhy ? "Hide why" : "Why am I seeing this?"}
-        </button>
-        {isOpen && (
-          <button type="button" className="mc-link mc-link-muted" disabled={locked} onClick={() => act({ type: "mute", nodeId: c.nodeId })}>
-            Don&apos;t show me these
-          </button>
         )}
-      </footer>
-      {showWhy && (
-        <ol className="mc-why">
-          {c.why.map((w, i) => (
-            <li key={i}>{w}</li>
-          ))}
-        </ol>
-      )}
+
+        <h3 className="mc-title">{c.title}</h3>
+        <p className={cx("mc-body", isVoice && "mc-transcript")}>{c.body}</p>
+
+        {isOpen ? actions : <div className={cx("mc-resolved-label", `mc-st-${moment.status}`)}>{resolvedText(moment)}</div>}
+
+        <footer className="mc-foot">
+          <button type="button" className="mc-link" onClick={() => setShowWhy((s) => !s)} aria-expanded={showWhy}>
+            {showWhy ? "Hide why" : "Why this?"}
+          </button>
+          {isOpen && (
+            <button type="button" className="mc-link" disabled={locked} onClick={() => act({ type: "mute", nodeId: c.nodeId })}>
+              Mute
+            </button>
+          )}
+        </footer>
+        {showWhy && (
+          <ol className="mc-why">
+            {c.why.map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ol>
+        )}
+      </div>
     </article>
   );
 }

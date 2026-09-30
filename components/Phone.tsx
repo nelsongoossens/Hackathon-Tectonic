@@ -66,12 +66,10 @@ function greetingName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? name;
 }
 
-function initials(name: string): string {
-  const parts = name.split(/[\s&]+/).filter(Boolean);
-  return parts
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
+function splitEUR(n: number): [string, string] {
+  const s = fmtEUR(n, 2);
+  const i = s.lastIndexOf(",");
+  return i < 0 ? [s, ""] : [s.slice(0, i), s.slice(i)];
 }
 
 export default function Phone({ data, onInteract, onAddRule, onVoice, busy, embedded }: Props) {
@@ -88,22 +86,8 @@ export default function Phone({ data, onInteract, onAddRule, onVoice, busy, embe
     <div className={cx("phone", embedded && "phone-embedded")}>
       <div className="phone-screen">
         <div className="ph-status" aria-hidden>
-          <span className="ph-time">9:41</span>
-          <span className="ph-island" />
-          <span className="ph-icons">
-            <svg width="17" height="11" viewBox="0 0 17 11">
-              <rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor" />
-              <rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor" />
-              <rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor" />
-              <rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor" />
-            </svg>
-            <svg width="15" height="11" viewBox="0 0 15 11">
-              <path d="M7.5 2.2c2.2 0 4.2.8 5.7 2.2l1.1-1.1A9.6 9.6 0 0 0 7.5.6 9.6 9.6 0 0 0 .7 3.3l1.1 1.1a8 8 0 0 1 5.7-2.2Zm0 3.2c1.3 0 2.5.5 3.4 1.3l1.1-1.1a6.4 6.4 0 0 0-9 0l1.1 1.1c.9-.8 2.1-1.3 3.4-1.3Zm0 3.2c.5 0 .9.2 1.2.5L7.5 10.3 6.3 9.1c.3-.3.7-.5 1.2-.5Z" fill="currentColor" />
-            </svg>
-            <span className="ph-battery">
-              <span />
-            </span>
-          </span>
+          <span>09:41</span>
+          <span>KBC · {greetingName(data.customer.name)}</span>
         </div>
 
         <div className="ph-scroll" ref={scrollRef}>
@@ -114,26 +98,14 @@ export default function Phone({ data, onInteract, onAddRule, onVoice, busy, embe
 
         <nav className="ph-tabs" aria-label="App sections">
           <button type="button" className={cx("ph-tab", tab === "home" && "is-active")} onClick={() => setTab("home")}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M3 10.5 12 3l9 7.5" />
-              <path d="M5 9.5V20h5v-6h4v6h5V9.5" />
-            </svg>
-            <span>Home</span>
+            Home
             {openCount > 0 && <span className="ph-tab-badge">{openCount}</span>}
           </button>
           <button type="button" className={cx("ph-tab", tab === "about" && "is-active")} onClick={() => setTab("about")}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
-            </svg>
-            <span>About me</span>
+            Understands
           </button>
           <button type="button" className={cx("ph-tab", tab === "rules" && "is-active")} onClick={() => setTab("rules")}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z" />
-              <path d="m8.5 12 2.5 2.5 4.5-5" />
-            </svg>
-            <span>My rules</span>
+            My rules
           </button>
         </nav>
 
@@ -162,24 +134,22 @@ function HomeTab({
   onVoice(momentId: string): Promise<Blob | null>;
   busy?: boolean;
 }) {
-  const name = greetingName(data.customer.name);
+  const [euros, cents] = splitEUR(data.balance);
   return (
     <div className="ph-page">
-      <div className="ph-home-head">
-        <div>
-          <div className="ph-date">{fmtLongDate(data.date)}</div>
-          <h1 className="ph-hello">Hi {name}</h1>
+      <div className="ph-balance">
+        <div className="ph-label">
+          {fmtLongDate(data.date)} · Everyday account
         </div>
-        <div className="ph-avatar" aria-hidden>
-          {initials(data.customer.name)}
+        <div className="ph-balance-amt">
+          {euros}
+          <span>{cents}</span>
         </div>
       </div>
-
-      <div className="ph-balance">
-        <div className="ph-balance-label">Everyday account</div>
-        <div className="ph-balance-amt">{fmtEUR(data.balance, 2)}</div>
-        <div className="ph-balance-sub">Available balance</div>
-        <span className="ph-balance-deco" aria-hidden />
+      <div className="ph-quick" aria-hidden>
+        <span className="ph-quick-btn is-primary">Pay</span>
+        <span className="ph-quick-btn">Transfer</span>
+        <span className="ph-quick-btn">Cards</span>
       </div>
 
       <section className="ph-section">
@@ -189,13 +159,9 @@ function HomeTab({
         </h2>
         {data.feed.length === 0 ? (
           <div className="ph-empty">
-            <div className="ph-empty-ico" aria-hidden>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 12.5A8 8 0 1 1 11.5 4a6.2 6.2 0 0 0 8.5 8.5Z" />
-              </svg>
-            </div>
-            <p>Nothing that needs your attention.</p>
-            <p className="ph-empty-sub">That&apos;s on purpose.</p>
+            <span className="ph-empty-dot" aria-hidden />
+            <p>Nothing needs you today.</p>
+            <p className="ph-empty-sub">Held back on purpose · see the silence log</p>
           </div>
         ) : (
           <div className="ph-feed">
@@ -207,7 +173,7 @@ function HomeTab({
       </section>
 
       <section className="ph-section">
-        <h2 className="ph-section-title">Recent transactions</h2>
+        <h2 className="ph-section-title">Recent</h2>
         {data.recentTxns.length === 0 ? (
           <div className="ph-muted">No transactions yet.</div>
         ) : (
@@ -265,7 +231,10 @@ function AboutTab({
 
   return (
     <div className="ph-page">
-      <h1 className="ph-h1">What KBC understands about me</h1>
+      <div className="ph-label">What KBC understands about you</div>
+      <h1 className="ph-h1">
+        {beliefs.filter((b) => b.status === "active").length} things. You can fix or remove any of them.
+      </h1>
       <p className="ph-intro">Everything here can be corrected. What you tell us always beats what we guess.</p>
       <div className="ph-legend">
         <SourceBadge source="bank_data" variant="customer" />
@@ -373,7 +342,8 @@ function RulesTab({
 
   return (
     <div className="ph-page">
-      <h1 className="ph-h1">My rules</h1>
+      <div className="ph-label">My rules</div>
+      <h1 className="ph-h1">You decide what KBC watches.</h1>
       <p className="ph-intro">You decide what KBC keeps an eye on. We check these for you and only speak up when one trips.</p>
 
       {rules.length === 0 ? (
