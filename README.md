@@ -70,18 +70,20 @@ npm run dev
 
 On Windows PowerShell, use `Copy-Item .env.example .env.local` for the copy step. Open [localhost:3000](http://localhost:3000).
 
-### Demo logins
+### Demo entry
 
-The copied `.env.example` already contains the demo passwords below, so the logins work as soon as the server starts. All four accounts are synthetic; the passwords are throwaway demo values that protect nothing outside this prototype. Change `DEMO_PASSWORD` and `STAFF_PASSWORD` in `.env.local` (at least 10 characters each) if you host the demo anywhere public.
+The copied `.env.example` sets `DEMO_OPEN=1`, so the login page shows a selector and no password is needed. Pick a part of the demo:
 
-| Username | Password | Role | Where it lands |
-|---|---|---|---|
-| `analyst` | `staff-NBd_Gx_u9f3h` | Staff | Control room at `/control`: timeline, client model, silence log, advisor queue, scale benchmark and a customer preview |
-| `emma` | `demo-eecTWVMK_Q0C` | Customer | Emma's app at `/app` |
-| `sam` | `demo-eecTWVMK_Q0C` | Customer | Sam & Noor's app at `/app` |
-| `jef` | `demo-eecTWVMK_Q0C` | Customer | Jef's app at `/app`, voice channel |
+| Entry | Role | Where it lands |
+|---|---|---|
+| `analyst` | Staff | Control room at `/control`: timeline, client model, silence log, advisor queue, scale benchmark and a customer preview |
+| `emma` | Customer | Emma's app at `/app` |
+| `sam` | Customer | Sam & Noor's app at `/app` |
+| `jef` | Customer | Jef's app at `/app`, voice channel |
 
-Start with `analyst` for the walkthrough below; the control room includes a customer preview, so a single login shows the whole loop. Log in as a customer to see the moments exactly as the app delivers them.
+Every choice still creates a normal server-side session, so role and ownership checks on the API are unchanged. To require passwords instead, set `DEMO_OPEN=0` and fill `DEMO_PASSWORD` / `STAFF_PASSWORD` in `.env.local` (at least 10 characters each).
+
+Start with `analyst` for the walkthrough below; the control room includes a customer preview, so a single entry shows the whole loop. Enter as a customer to see the moments exactly as the app delivers them.
 
 Optional integrations are configured in `.env.local`: `ANTHROPIC_API_KEY` enables Claude, `ANTHROPIC_MODEL` selects the model, and `ELEVENLABS_API_KEY` enables voice synthesis. Without keys, the app uses heuristic sensemaking and browser speech where supported. `LLM_DISABLED=1` forces the offline path. See [.env.example](.env.example) for configuration names without secret values.
 
@@ -118,7 +120,7 @@ The browser regression tests use installed Microsoft Edge on Windows and Playwri
 ## Unfinished work and limitations
 
 - State, sessions and rate limits assume a single application instance. Interactions and LLM responses persist as JSON in `.data/`; production needs durable storage, shared session/rate-limit infrastructure and stream processing.
-- Demo users share locally configured passwords by role. There is no production identity provider, core-banking connection, payment execution or real advisor workflow.
+- The demo is open by default (`DEMO_OPEN=1`); password logins exist but are off for judging. There is no production identity provider, core-banking connection, payment execution or real advisor workflow.
 - The service graph is a hand-written 17-node slice. Advisor routing demonstrates a guardrail; it is not a complete suitability or regulatory compliance system.
 - Model correction is implemented, but production consent, retention, deletion and privacy review remain future work.
 - Scale results measure the watcher layer on one core with synthetic traffic. LLM cost figures use hard-coded price, exchange-rate and token assumptions; they are estimates, not measured production costs or verified current prices.

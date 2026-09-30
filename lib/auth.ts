@@ -42,6 +42,15 @@ function passwordFor(role: Role): string | null {
   return p && p.length >= 10 ? p : null;
 }
 
+/** DEMO_OPEN=1 lets the login page pick a synthetic user without a password (sessions and role checks stay). */
+export function demoOpen(): boolean {
+  return process.env.DEMO_OPEN === "1";
+}
+
+export function findUser(username: string): User | undefined {
+  return USERS.find((u) => u.username === normalizeUsername(username));
+}
+
 export function authConfigured(): boolean {
   return Boolean(passwordFor("staff") && passwordFor("customer"));
 }
@@ -61,7 +70,7 @@ export function normalizeUsername(username: string): string {
 
 /** Returns the user on success, null on bad credentials. Constant-time comparison. */
 export function verifyLogin(username: string, password: string): User | null {
-  const user = USERS.find((u) => u.username === normalizeUsername(username));
+  const user = findUser(username);
   const expected = passwordFor(user?.role ?? "customer");
   const ok = expected !== null && timingSafeEqual(digest(password), digest(expected));
   return user && ok ? user : null;
