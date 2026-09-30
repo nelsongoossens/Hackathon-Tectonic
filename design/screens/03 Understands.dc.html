@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#CFC4C2;--grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#121212}a:hover{color:#FF4B2B}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</helmet>
+<div style="position:relative;min-height:100vh;padding:56px 64px 96px;font-family:'Space Grotesk',sans-serif;color:#121212;box-sizing:border-box">
+<div style="position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none"></div>
+<div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px">
+  <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin-bottom:10px">03 / What KBC understands about you · 390×844</div><div style="font-size:44px;line-height:.98;letter-spacing:-.03em;font-weight:500">A trust feature</div></div>
+  <nav style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><a href="01 Components.dc.html">01 Components</a><a href="02 Home.dc.html">02 Home</a><a href="04 Silence Log.dc.html">04 Silence</a><a href="05 Budgets.dc.html">05 Budgets</a><a href="06 Dashboard.dc.html">06 Dashboard</a></nav>
+</div>
+<div style="position:relative;display:flex;gap:48px;flex-wrap:wrap;align-items:flex-start">
+
+<!-- Overview -->
+<div data-screen-label="Understands · overview" style="width:390px;height:844px;border-radius:44px;background:#F1ECE8;overflow:hidden;position:relative;box-sizing:border-box;display:flex;flex-direction:column">
+  <div style="display:flex;justify-content:space-between;padding:18px 28px 0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em"><span>09:41</span><span>KBC · Lotte</span></div>
+  <div style="padding:36px 24px 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">What KBC understands about you</div>
+    <div style="font-size:34px;line-height:1.02;letter-spacing:-.03em;font-weight:500;margin-top:10px;text-wrap:pretty">14 things. You can fix or remove any of them.</div>
+    <div style="font-size:13px;color:#6B6461;margin-top:10px;line-height:1.45">Nothing here is shared or sold. Removing a claim also removes the moments built on it.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:26px 16px 0;flex:1">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-radius:28px;border:1px solid rgba(18,18,18,.12)"><div><div style="font-size:18px;letter-spacing:-.02em;font-weight:500">Income</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:6px">3 claims · 2 bank data · 1 you said</div></div><span style="font-size:20px;color:#6B6461">→</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-radius:28px;border:1px solid rgba(18,18,18,.12)"><div><div style="font-size:18px;letter-spacing:-.02em;font-weight:500">Housing</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:6px">4 claims · 1 inferred</div></div><span style="font-size:20px;color:#6B6461">→</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-radius:28px;border:1px solid rgba(18,18,18,.12)"><div><div style="font-size:18px;letter-spacing:-.02em;font-weight:500">Mobility</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:6px">2 claims · 1 low confidence</div></div><span style="font-size:20px;color:#6B6461">→</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-radius:28px;border:1px solid rgba(18,18,18,.12)"><div><div style="font-size:18px;letter-spacing:-.02em;font-weight:500">Household</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:6px">5 claims · 2 inferred</div></div><span style="font-size:20px;color:#6B6461">→</span></div>
+  </div>
+  <div style="display:flex;justify-content:space-around;padding:12px 24px 22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="color:#6B6461">Home</span><span style="color:#6B6461">Pay</span><span>Understands</span><span style="color:#6B6461">Silence</span></div>
+</div>
+
+<!-- Domain: Household -->
+<div data-screen-label="Understands · Household" style="width:390px;height:844px;border-radius:44px;background:#F1ECE8;overflow:hidden;position:relative;box-sizing:border-box;display:flex;flex-direction:column">
+  <div style="display:flex;justify-content:space-between;padding:18px 28px 0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em"><span>09:41</span><span>KBC · Lotte</span></div>
+  <div style="padding:36px 24px 0;display:flex;align-items:baseline;gap:14px"><span style="font-size:20px;color:#6B6461">←</span><div style="font-size:34px;line-height:1;letter-spacing:-.03em;font-weight:500">Household</div></div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:24px 16px 0;flex:1;overflow:hidden">
+    <div style="padding:18px 20px;border-radius:28px;border:1px solid rgba(18,18,18,.12)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="padding:4px 8px;border-radius:999px;background:#121212;color:#F1ECE8">Bank data</span><span style="color:#6B6461">Conf 96%</span></div>
+      <div style="font-size:18px;letter-spacing:-.02em;font-weight:500;margin-top:12px;line-height:1.2">You have a pet, probably a dog.</div>
+      <div style="font-size:13px;color:#6B6461;margin-top:8px;line-height:1.45">6 payments to Dierenkliniek Aalst; monthly Zooplus orders since March.</div>
+      <div style="display:flex;gap:6px;margin-top:14px"><button style="height:40px;padding:0 16px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:13px">Confirm</button><button style="height:40px;padding:0 16px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:13px">Fix</button><button style="height:40px;padding:0 16px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:13px;color:#6B6461;text-decoration:underline">Remove</button></div>
+    </div>
+    <div style="padding:18px 20px;border-radius:28px;border:1px solid rgba(18,18,18,.12)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="padding:4px 8px;border-radius:999px;border:1px solid #121212">You said</span><span style="color:#6B6461">Conf 100%</span></div>
+      <div style="font-size:18px;letter-spacing:-.02em;font-weight:500;margin-top:12px;line-height:1.2">Two adults, no children.</div>
+      <div style="font-size:13px;color:#6B6461;margin-top:8px;line-height:1.45">You told us on 12 Feb, during the Huis goal setup.</div>
+      <div style="display:flex;gap:6px;margin-top:14px"><button style="height:40px;padding:0 16px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:13px">Fix</button><button style="height:40px;padding:0 16px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:13px;color:#6B6461;text-decoration:underline">Remove</button></div>
+    </div>
+    <div style="padding:18px 20px;border-radius:28px;border:1px dashed rgba(18,18,18,.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="padding:4px 8px;border-radius:999px;background:#E6E0DD;color:#6B6461">Inferred</span><span style="color:#6B6461">Conf 52%</span></div>
+      <div style="font-size:18px;letter-spacing:-.02em;font-weight:500;margin-top:12px;line-height:1.2">Groceries are shared with someone.</div>
+      <div style="font-size:13px;color:#6B6461;margin-top:8px;line-height:1.45">Recurring €180 transfer from J. Peeters, always after a Colruyt visit. Low confidence: not used for moments yet.</div>
+      <div style="display:flex;gap:6px;margin-top:14px"><button style="height:40px;padding:0 16px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:13px">Confirm</button><button style="height:40px;padding:0 16px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:13px">Fix</button><button style="height:40px;padding:0 16px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:13px;color:#6B6461;text-decoration:underline">Remove</button></div>
+    </div>
+  </div>
+  <div style="padding:14px 24px 22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;text-align:center">Removed claims are gone in 24h · Export all</div>
+</div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>

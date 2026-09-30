@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#CFC4C2;--grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#121212}a:hover{color:#FF4B2B}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="position:relative;min-height:100vh;padding:56px 64px 96px;font-family:'Space Grotesk',sans-serif;color:#121212;box-sizing:border-box">
+<div style="position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none"></div>
+<div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px">
+  <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin-bottom:10px">05 / Budgets widget · interactive</div><div style="font-size:44px;line-height:.98;letter-spacing:-.03em;font-weight:500">Attention is spent. Trust is earned.</div></div>
+  <nav style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><a href="01 Components.dc.html">01 Components</a><a href="02 Home.dc.html">02 Home</a><a href="03 Understands.dc.html">03 Understands</a><a href="04 Silence Log.dc.html">04 Silence</a><a href="06 Dashboard.dc.html">06 Dashboard</a></nav>
+</div>
+<div style="position:relative;display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start">
+  <div style="width:342px;border-radius:28px;background:#F1ECE8;padding:24px;box-sizing:border-box">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Budgets · this week</div>
+    <div style="display:flex;gap:20px;margin-top:22px">
+      <div style="flex:1">
+        <div style="position:relative;width:120px;height:120px;border-radius:50%;background:{{ attnRing }}"><div style="position:absolute;inset:12px;border-radius:50%;background:#F1ECE8;display:grid;place-items:center;font-size:26px;letter-spacing:-.03em;font-weight:500">{{ attnLabel }}</div></div>
+        <div style="font-size:16px;font-weight:500;letter-spacing:-.01em;margin-top:14px">Attention</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:4px">{{ attnNote }}</div>
+      </div>
+      <div style="flex:1">
+        <div style="position:relative;width:120px;height:120px;border-radius:50%;background:{{ trustRing }}"><div style="position:absolute;inset:12px;border-radius:50%;background:#F1ECE8;display:grid;place-items:center;font-size:26px;letter-spacing:-.03em;font-weight:500">{{ trustLabel }}</div></div>
+        <div style="font-size:16px;font-weight:500;letter-spacing:-.01em;margin-top:14px">Trust</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:4px">{{ trustNote }}</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#6B6461;line-height:1.45;margin-top:22px;text-wrap:pretty">{{ explain }}</div>
+  </div>
+  <div style="width:342px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Simulate an interaction</div>
+    <button onClick="{{ onShow }}" style="height:52px;border-radius:999px;border:1px solid #121212;background:#F1ECE8;font:inherit;font-size:15px;cursor:pointer;text-align:left;padding:0 22px">Moment shown <span style="color:#6B6461;font-size:13px">· attention −12</span></button>
+    <button onClick="{{ onAccept }}" style="height:52px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:15px;cursor:pointer;text-align:left;padding:0 22px">Accepted <span style="opacity:.6;font-size:13px">· trust +6</span></button>
+    <button onClick="{{ onDismiss }}" style="height:52px;border-radius:999px;border:1px solid #121212;background:#F1ECE8;font:inherit;font-size:15px;cursor:pointer;text-align:left;padding:0 22px">Dismissed <span style="color:#6B6461;font-size:13px">· trust −9, attention −4</span></button>
+    <button onClick="{{ onQuietDay }}" style="height:52px;border-radius:999px;border:1px solid #121212;background:#F1ECE8;font:inherit;font-size:15px;cursor:pointer;text-align:left;padding:0 22px">Quiet day <span style="color:#6B6461;font-size:13px">· attention +20, trust +2</span></button>
+    <button onClick="{{ onReset }}" style="height:44px;border:0;background:transparent;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;cursor:pointer;text-align:left;padding:0 22px;text-decoration:underline">Reset</button>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:600}}">
+class Component extends DCLogic {
+  state = { attn: 64, trust: 72, shownA: 64, shownT: 72, last: 'Nothing has happened yet. Attention refills daily; trust moves only when you respond.' };
+  tween() {
+    clearInterval(this._t);
+    this._t = setInterval(() => {
+      const { attn, trust, shownA, shownT } = this.state;
+      const na = shownA + (attn - shownA) * 0.12, nt = shownT + (trust - shownT) * 0.12;
+      if (Math.abs(na - attn) < 0.3 && Math.abs(nt - trust) < 0.3) { clearInterval(this._t); this.setState({ shownA: attn, shownT: trust }); }
+      else this.setState({ shownA: na, shownT: nt });
+    }, 30);
+  }
+  apply(da, dt, last) {
+    const c = v => Math.max(0, Math.min(100, v));
+    this.setState(s => ({ attn: c(s.attn + da), trust: c(s.trust + dt), last }), () => this.tween());
+  }
+  componentWillUnmount() { clearInterval(this._t); }
+  ring(pct, color) {
+    return `conic-gradient(${color} ${pct}%, rgba(18,18,18,.08) ${pct}% 100%)`;
+  }
+  renderVals() {
+    const { shownA, shownT, attn, trust } = this.state;
+    return {
+      attnRing: this.ring(shownA, shownA < 25 ? '#FF4B2B' : '#121212'),
+      trustRing: this.ring(shownT, '#1F4E5F'),
+      attnLabel: Math.round(shownA) + '%',
+      trustLabel: Math.round(shownT) + '%',
+      attnNote: attn < 25 ? 'Nearly spent · gate tightens' : attn < 55 ? 'Draining · fewer moments' : 'Rested · gate open',
+      trustNote: trust < 40 ? 'Low · confirm-only' : trust < 70 ? 'Building' : 'High · can act',
+      explain: this.state.last,
+      onShow: () => this.apply(-12, 0, 'A moment was shown. Each interruption costs attention, whether or not you respond.'),
+      onAccept: () => this.apply(0, 6, 'You accepted. Trust rises, and the agent may propose slightly bolder moments.'),
+      onDismiss: () => this.apply(-4, -9, 'You dismissed. Trust drops and the gate raises its threshold for this topic.'),
+      onQuietDay: () => this.apply(20, 2, 'A quiet day. Attention refills; staying silent earns a little trust too.'),
+      onReset: () => { this.setState({ attn: 64, trust: 72, last: 'Reset.' }, () => this.tween()); }
+    };
+  }
+}
+</script>
+</body>
+</html>

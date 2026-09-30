@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#CFC4C2;--grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#121212}a:hover{color:#FF4B2B}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.1);opacity:1}}
+input[type=range]{accent-color:#121212}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="position:relative;width:1440px;min-height:900px;padding:36px 48px 56px;font-family:'Space Grotesk',sans-serif;color:#121212;box-sizing:border-box">
+<div style="position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none"></div>
+<!-- top bar -->
+<div style="position:relative;display:flex;justify-content:space-between;align-items:center;gap:24px">
+  <div style="display:flex;align-items:center;gap:28px">
+    <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">06 / Demo dashboard · the gate</div><div style="font-size:30px;line-height:1;letter-spacing:-.03em;font-weight:500;margin-top:6px">Most moments stay silent.</div></div>
+    <div style="display:flex;gap:6px;padding:4px;border-radius:999px;border:1px solid rgba(18,18,18,.15)">
+      <button onClick="{{ pickLotte }}" style="height:40px;padding:0 18px;border-radius:999px;border:0;background:{{ lotteBg }};color:{{ lotteFg }};font:inherit;font-size:14px;cursor:pointer">Lotte · 28 · saving for a house</button>
+      <button onClick="{{ pickMarc }}" style="height:40px;padding:0 18px;border-radius:999px;border:0;background:{{ marcBg }};color:{{ marcFg }};font:inherit;font-size:14px;cursor:pointer">Marc · 71 · retired</button>
+    </div>
+    <div style="display:flex;gap:6px;padding:4px;border-radius:999px;border:1px solid rgba(18,18,18,.15)">
+      <button onClick="{{ viewGate }}" style="height:40px;padding:0 18px;border-radius:999px;border:0;background:{{ gateBg }};color:{{ gateFg }};font:inherit;font-size:14px;cursor:pointer">Gate</button>
+      <button onClick="{{ viewSplit }}" style="height:40px;padding:0 18px;border-radius:999px;border:0;background:{{ splitBg }};color:{{ splitFg }};font:inherit;font-size:14px;cursor:pointer">Split comparison</button>
+    </div>
+  </div>
+  <nav style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><a href="01 Components.dc.html">01</a><a href="02 Home.dc.html">02</a><a href="03 Understands.dc.html">03</a><a href="04 Silence Log.dc.html">04</a><a href="05 Budgets.dc.html">05</a></nav>
+</div>
+
+<!-- timeline -->
+<div style="position:relative;margin-top:28px;padding:18px 24px;border-radius:28px;background:#F1ECE8;display:flex;align-items:center;gap:24px">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;width:120px">Timeline · 6 months</div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+    <input type="range" min="0" max="5" step="1" value="{{ t }}" onChange="{{ onScrub }}" style="width:100%;margin:0">
+    <div style="display:flex;justify-content:space-between"><sc-for list="{{ months }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.go }}" style="border:0;background:transparent;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:{{ m.color }};cursor:pointer;padding:4px 0">{{ m.label }}</button></sc-for></div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;width:220px;text-align:right">{{ tally }}</div>
+</div>
+
+<sc-if value="{{ isGate }}" hint-placeholder-val="{{ true }}">
+<div style="position:relative;display:grid;grid-template-columns:300px minmax(0,1fr) 340px;gap:24px;margin-top:24px;align-items:start">
+  <!-- left: client model -->
+  <div style="border-radius:28px;background:#F1ECE8;padding:22px;min-height:560px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Client model · {{ knownCount }} claims</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+      <sc-for list="{{ claims }}" as="k" hint-placeholder-count="8">
+        <div style="padding:12px 14px;border-radius:18px;border:1px {{ k.border }} rgba(18,18,18,.15);opacity:{{ k.opacity }};transition:opacity .5s">
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>{{ k.domain }}</span><span>{{ k.source }}</span></div>
+          <div style="font-size:14px;margin-top:6px;line-height:1.3">{{ k.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <!-- center: the gate -->
+  <div style="border-radius:28px;background:#F1ECE8;padding:22px;min-height:560px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.06;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461"><span>Gate · {{ candCount }} candidates so far</span><span>Threshold {{ threshold }} · score = v × c × u − cost</span></div>
+    <div style="position:relative;display:flex;flex-wrap:wrap;gap:18px 22px;align-items:flex-end;margin-top:26px;min-height:200px">
+      <sc-for list="{{ passing }}" as="p" hint-placeholder-count="3">
+        <div style="position:relative;width:{{ p.size }}px;height:{{ p.size }}px;display:grid;place-items:center">
+          <div style="position:absolute;inset:0;border-radius:50%;background:{{ p.bg }};filter:blur(14px);animation:breathe 7s ease-in-out infinite"></div>
+          <div style="position:relative;background:rgba(241,236,232,.86);backdrop-filter:blur(8px);padding:8px 10px;border-radius:14px;font-size:12px;line-height:1.25;text-align:center;max-width:120px;font-weight:500">{{ p.title }}<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:#6B6461;margin-top:4px">{{ p.score }} · {{ p.monthLabel }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="position:relative;margin-top:26px;padding-top:18px;border-top:1px dashed rgba(18,18,18,.2)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Silence log · {{ silentCount }} held</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+        <sc-for list="{{ silent }}" as="s" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;border-radius:999px;background:#E6E0DD;color:#6B6461;font-size:12px"><span style="width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#8E8683,#CFC4C2);filter:blur(1px)"></span>{{ s.title }}<span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em">{{ s.score }} · {{ s.reason }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <!-- right: phone -->
+  <div style="border-radius:28px;background:#F1ECE8;padding:22px;min-height:560px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Customer sees · {{ monthLabel }}</div>
+    <div style="margin:16px auto 0;width:280px;height:500px;border-radius:36px;border:1px solid rgba(18,18,18,.15);padding:18px 16px;box-sizing:border-box;position:relative;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em"><span>09:41</span><span>KBC · {{ name }}</span></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:26px">Total</div>
+      <div style="font-size:38px;letter-spacing:-.04em;font-weight:500;line-height:1;margin-top:4px">{{ balance }}</div>
+      <div style="display:flex;gap:6px;margin-top:16px"><span style="height:30px;padding:0 12px;border-radius:999px;background:#121212;color:#F1ECE8;font-size:11px;display:grid;place-items:center">Pay</span><span style="height:30px;padding:0 12px;border-radius:999px;border:1px solid #121212;font-size:11px;display:grid;place-items:center">Transfer</span></div>
+      <sc-if value="{{ hasMoment }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;margin-top:22px;border-radius:20px;border:1px solid rgba(18,18,18,.08);overflow:hidden;background:#F1ECE8">
+          <div style="position:absolute;right:-50px;top:-60px;width:{{ momentSize }}px;height:{{ momentSize }}px;border-radius:50%;background:{{ momentBg }};filter:blur(18px);animation:breathe 7s ease-in-out infinite"></div>
+          <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+          <div style="position:relative;padding:12px 12px 0;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.85);padding:4px 8px;border-radius:999px">{{ momentKind }} · {{ momentConf }}</span></div>
+          <div style="position:relative;margin:26px 8px 8px;padding:12px;border-radius:14px;background:rgba(241,236,232,.82);backdrop-filter:blur(12px)">
+            <div style="font-size:15px;line-height:1.15;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">{{ momentTitle }}</div>
+            <div style="font-size:11px;color:#6B6461;margin-top:6px;line-height:1.35">{{ momentReason }}</div>
+            <div style="display:flex;gap:6px;margin-top:10px"><span style="flex:1;height:34px;border-radius:999px;background:#121212;color:#F1ECE8;font-size:12px;display:grid;place-items:center">{{ momentCta }}</span><span style="height:34px;padding:0 12px;border-radius:999px;border:1px solid #121212;font-size:12px;display:grid;place-items:center">Not now</span></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noMoment }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:22px;padding:26px 16px;border-radius:20px;border:1px dashed rgba(18,18,18,.2);text-align:center"><div style="width:8px;height:8px;border-radius:50%;background:#CFC4C2;margin:0 auto 12px"></div><div style="font-size:14px;font-weight:500;letter-spacing:-.01em">Nothing needs you today.</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:8px">{{ heldThisMonth }} held this month</div></div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSplit }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;margin-top:24px;border-radius:28px;background:#F1ECE8;padding:28px">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Same trigger, two customers</div>
+  <div style="font-size:30px;letter-spacing:-.03em;font-weight:500;margin-top:8px">A €1,420 deposit arrives from an unknown sender.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px">
+    <div style="border-radius:24px;border:1px solid rgba(18,18,18,.12);padding:22px;display:grid;grid-template-columns:1fr 300px;gap:22px">
+      <div>
+        <div style="font-size:20px;letter-spacing:-.02em;font-weight:500">Lotte · 28</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:6px">Threshold 0.25 · trust 72%</div>
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#6B6461"><div style="display:flex;justify-content:space-between"><span>Value</span><span style="color:#121212">0.70</span></div><div style="display:flex;justify-content:space-between"><span>Confidence · no matching claim</span><span style="color:#121212">0.83</span></div><div style="display:flex;justify-content:space-between"><span>Urgency · untagged income skews budget</span><span style="color:#121212">0.70</span></div><div style="display:flex;justify-content:space-between"><span>− Interruption cost · quiet evening</span><span style="color:#121212">0.05</span></div><div style="display:flex;justify-content:space-between;border-top:1px solid rgba(18,18,18,.15);padding-top:8px;color:#121212"><span>Score</span><span>0.36 → shown</span></div></div>
+        <div style="font-size:14px;line-height:1.45;margin-top:18px;color:#6B6461;text-wrap:pretty">Nothing in Lotte's model explains the sender. Asking once, by voice, is cheaper than guessing wrong for months.</div>
+      </div>
+      <div style="position:relative;border-radius:20px;background:#F1ECE8;border:1px solid rgba(18,18,18,.08);overflow:hidden">
+        <div style="position:absolute;left:50%;top:20px;width:220px;height:220px;margin-left:-110px;border-radius:50%;background:radial-gradient(circle,#FF4B2B 0%,#FF8A3D 40%,rgba(255,138,61,0) 70%);filter:blur(24px);opacity:.6;animation:breathe 7s ease-in-out infinite"></div>
+        <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+        <div style="position:relative;padding:14px 14px 0;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.85);padding:4px 8px;border-radius:999px">Voice · Income · 83%</span></div>
+        <div style="position:relative;margin:12px 10px 10px;padding:14px;border-radius:14px;background:rgba(241,236,232,.82);backdrop-filter:blur(12px)">
+          <div style="font-size:17px;line-height:1.15;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">A €1,420 deposit came from a new sender. What is it?</div>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:16px"><span style="width:44px;height:44px;border-radius:50%;background:#121212;display:grid;place-items:center"><span style="width:10px;height:16px;border-radius:5px;background:#F1ECE8;display:block"></span></span><span style="font-size:12px;color:#6B6461">Hold to answer</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="border-radius:24px;border:1px solid rgba(18,18,18,.12);padding:22px;display:grid;grid-template-columns:1fr 300px;gap:22px">
+      <div>
+        <div style="font-size:20px;letter-spacing:-.02em;font-weight:500">Marc · 71</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:6px">Threshold 0.40 · trust 88%</div>
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#6B6461"><div style="display:flex;justify-content:space-between"><span>Value</span><span style="color:#121212">0.30</span></div><div style="display:flex;justify-content:space-between"><span>Confidence · matches "quarterly supplement"</span><span style="color:#121212">0.90</span></div><div style="display:flex;justify-content:space-between"><span>Urgency</span><span style="color:#121212">0.30</span></div><div style="display:flex;justify-content:space-between"><span>− Interruption cost · prefers fewer</span><span style="color:#121212">0.05</span></div><div style="display:flex;justify-content:space-between;border-top:1px solid rgba(18,18,18,.15);padding-top:8px;color:#121212"><span>Score</span><span>0.03 → silent</span></div></div>
+        <div style="font-size:14px;line-height:1.45;margin-top:18px;color:#6B6461;text-wrap:pretty">Marc told us in May: "Ethias pays a supplement every quarter." The deposit matches. Asking again would spend trust for nothing.</div>
+      </div>
+      <div style="position:relative;border-radius:20px;background:#E9E3E0;overflow:hidden;color:#6B6461">
+        <div style="position:absolute;right:18px;top:16px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,#8E8683 0%,#B8B0AD 50%,rgba(184,176,173,0) 72%);filter:blur(10px)"></div>
+        <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.07;mix-blend-mode:multiply;pointer-events:none"></div>
+        <div style="position:relative;padding:18px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase">Silence log · Income</div>
+        <div style="position:relative;padding:0 18px 18px;font-size:15px;line-height:1.25;letter-spacing:-.01em;font-weight:500">Deposit tagged "pension supplement · You said". No moment created.</div>
+        <div style="position:relative;padding:0 18px 18px;font-size:12px;line-height:1.4">Marc's home screen stays empty. Visible to him only in the silence log.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:960}}">
+class Component extends DCLogic {
+  state = { who: 'lotte', t: 4, view: 'gate' };
+  data = {
+    lotte: { name: 'Lotte', threshold: 0.25, balances: ['€2,140', '€2,610', '€3,180', '€3,905', '€4,318', '€4,760'],
+      claims: [
+        ['Income', 'Bank data', 'Salary €2,410 monthly, Vandenbroucke NV', 0],
+        ['Housing', 'You said', 'Saving for a house, target 2028', 0],
+        ['Housing', 'Bank data', 'Rents at €890, indexed in May', 1],
+        ['Household', 'You said', 'Two adults, no children', 0],
+        ['Mobility', 'Bank data', 'Owns a car, insured at €68/mo', 1],
+        ['Household', 'Inferred', 'Has a pet, probably a dog', 2],
+        ['Income', 'You said', 'Occasional freelance invoices', 3],
+        ['Household', 'Inferred', 'Groceries shared with someone', 4]],
+      cands: [
+        ['Salary pattern detected', 'teal', .4, .9, .2, .05, 0, 'Not actionable'],
+        ['Weekend cash withdrawals', 'teal', .2, .9, .2, .05, 0, 'Too small'],
+        ['Set up a house goal?', 'coral', .8, .7, .6, .05, 0, '', 'Question · Savings', 'You moved €400 to savings twice. Make it a goal?', 'Create goal'],
+        ['Rent increased €40', 'teal', .6, .85, .5, .04, 1, 'Already visible'],
+        ['€38 at a new café', 'teal', .2, .9, .3, .12, 1, 'Too small'],
+        ['Phone contract renews', 'teal', .4, .6, .4, .08, 1, 'Low value'],
+        ['Grocery spending up 30%', 'teal', .6, .64, .8, .03, 2, '', 'Question · Spending', '€612 vs €470 average. New normal or temporary?', 'Answer'],
+        ['Move €120 to Huis', 'coral', .6, .77, .8, .06, 2, '', 'Set amount · Savings', 'You have €430 unspent this month.', 'Move €120'],
+        ['Recurring charity donation', 'teal', .2, .95, .1, .02, 2, 'Not actionable'],
+        ['Cheaper car insurance', 'teal', .7, .58, .4, .28, 3, 'You were busy'],
+        ['Mortgage rates dropped', 'teal', .9, .48, .5, .05, 3, 'Low confidence'],
+        ['Unknown €1,420 deposit', 'coral', .7, .83, .7, .05, 3, '', 'Voice · Income', 'A deposit came from a new sender. What is it?', 'Answer'],
+        ['Energy bill €212 due', 'coral', .7, .91, .8, .05, 4, '', 'Confirm · Payments', 'Due Friday. Balance covers it with €1,840 to spare.', 'Pay €212'],
+        ['Duplicate streaming €12', 'teal', .3, .8, .3, .08, 4, 'Too small'],
+        ['Holiday spending spike', 'teal', .4, .7, .4, .1, 4, 'Expected'],
+        ['Gym unused 6 weeks', 'teal', .4, .55, .3, .15, 4, 'Low trust on habits'],
+        ['Fees on savings account', 'teal', .5, .6, .3, .05, 5, 'Low urgency'],
+        ['Huis goal at 41%', 'teal', .3, 1, .2, .02, 5, 'Not actionable'],
+        ['Tax prepayment reminder', 'coral', .8, .7, .9, .05, 5, '', 'Confirm · Income', 'Freelance income means a prepayment by 10 Oct.', 'Set aside €310'],
+        ['Rent due, balance low?', 'coral', .9, .35, .9, .05, 5, 'Low confidence']] },
+    marc: { name: 'Marc', threshold: 0.40, balances: ['€18,420', '€18,290', '€19,710', '€19,540', '€34,210', '€33,980'],
+      claims: [
+        ['Income', 'Bank data', 'Pension €1,980 monthly', 0],
+        ['Housing', 'Bank data', 'Owns home, no mortgage', 0],
+        ['Household', 'Bank data', 'Term deposit €15,000, matures Aug', 0],
+        ['Income', 'You said', 'Ethias supplement €1,420 quarterly', 1],
+        ['Housing', 'Bank data', 'Heating on direct debit', 1],
+        ['Household', 'Inferred', 'Lives alone', 2],
+        ['Household', 'You said', 'Three grandchildren', 2],
+        ['Mobility', 'Inferred', 'Owns a car, drives little', 3]],
+      cands: [
+        ['Pension arrived', 'teal', .3, 1, .2, .02, 0, 'Not actionable'],
+        ['Large pharmacy spend', 'teal', .5, .7, .4, .1, 0, 'Sensitive · no nudge'],
+        ['Weekly market cash', 'teal', .2, .9, .1, .02, 0, 'Not actionable'],
+        ['Set up a savings goal?', 'teal', .3, .4, .3, .05, 0, 'Low confidence'],
+        ['Unknown €1,420 deposit', 'teal', .3, .9, .3, .05, 1, 'You said: supplement'],
+        ['Heating advance up €60', 'coral', .7, .9, .7, .03, 1, '', 'Confirm · Housing', 'Your supplier raised the monthly advance. Accept or contest?', 'Accept'],
+        ['Phone data overage', 'teal', .3, .7, .4, .06, 1, 'Too small'],
+        ['Grocery spending up 30%', 'teal', .3, .6, .3, .05, 2, 'Normal variance'],
+        ['Transfers to grandchildren', 'teal', .2, .8, .1, .05, 2, 'Not actionable'],
+        ['Eating out more often', 'teal', .2, .6, .2, .1, 2, 'None of our business'],
+        ['Card used abroad', 'coral', .9, .85, .9, .05, 3, '', 'Confirm · Security', 'Your card was used in Lisbon. Was that you?', 'Yes, me'],
+        ['Insurance premium up 8%', 'teal', .5, .9, .4, .05, 3, 'Low urgency'],
+        ['Cheaper car insurance', 'teal', .6, .6, .3, .2, 3, 'Drives little'],
+        ['Term deposit matures €15k', 'coral', .9, 1, .7, .04, 4, '', 'Question · Savings', '€15,000 lands Thursday. Renew, or keep it available?', 'Renew'],
+        ['Streaming trial ended', 'teal', .2, .7, .3, .05, 4, 'Too small'],
+        ['Unused subscription', 'teal', .3, .5, .3, .1, 4, 'Low confidence'],
+        ['Energy bill €188', 'teal', .4, .95, .3, .03, 5, 'Already on direct debit'],
+        ['Gift tax window', 'teal', .6, .5, .5, .06, 5, 'Low confidence'],
+        ['Pension indexed +2%', 'teal', .4, 1, .2, .02, 5, 'Not actionable'],
+        ['Refund running late', 'coral', .7, .6, .6, .05, 5, 'Below threshold']] }
+  };
+  months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+  renderVals() {
+    const { who, t, view } = this.state, d = this.data[who];
+    const pill = on => on ? ['#121212', '#F1ECE8'] : ['transparent', '#121212'];
+    const [lotteBg, lotteFg] = pill(who === 'lotte'), [marcBg, marcFg] = pill(who === 'marc');
+    const [gateBg, gateFg] = pill(view === 'gate'), [splitBg, splitFg] = pill(view === 'split');
+    const cands = d.cands.filter(c => c[6] <= t).map(c => {
+      const [title, hue, v, cf, u, cost, m, reason, kind, why, cta] = c;
+      const score = v * cf * u - cost, pass = score >= d.threshold;
+      const bg = hue === 'coral' ? 'radial-gradient(circle,#FF4B2B 0%,#FF8A3D 42%,rgba(255,138,61,0) 72%)' : 'radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%)';
+      return { title, hue, score: score.toFixed(2), scoreN: score, pass, m, monthLabel: this.months[m], reason, kind, why, cta, conf: Math.round(cf * 100) + '%', bg, size: Math.round(90 + 130 * cf * u) };
+    });
+    const passing = cands.filter(c => c.pass), silent = cands.filter(c => !c.pass);
+    const thisMonth = passing.filter(c => c.m === t).sort((a, b) => b.scoreN - a.scoreN)[0];
+    const heldThisMonth = silent.filter(c => c.m === t).length;
+    return {
+      t, tally: `${passing.length} shown · ${silent.length} silent · ${this.months[t]}`,
+      monthLabel: this.months[t], name: d.name, balance: d.balances[t], threshold: d.threshold.toFixed(2),
+      lotteBg, lotteFg, marcBg, marcFg, gateBg, gateFg, splitBg, splitFg,
+      isGate: view === 'gate', isSplit: view === 'split',
+      pickLotte: () => this.setState({ who: 'lotte' }), pickMarc: () => this.setState({ who: 'marc' }),
+      viewGate: () => this.setState({ view: 'gate' }), viewSplit: () => this.setState({ view: 'split' }),
+      onScrub: e => this.setState({ t: +e.target.value }),
+      months: this.months.map((label, i) => ({ label, color: i === t ? '#121212' : (i < t ? '#6B6461' : '#A39B98'), go: () => this.setState({ t: i }) })),
+      claims: d.claims.map(([domain, source, text, m]) => ({ domain, source: m <= t ? source : '—', text: m <= t ? text : 'Not yet known', border: m <= t ? 'solid' : 'dashed', opacity: m <= t ? 1 : .45 })),
+      knownCount: d.claims.filter(k => k[3] <= t).length,
+      candCount: cands.length, passing, silent, silentCount: silent.length,
+      hasMoment: !!thisMonth, noMoment: !thisMonth, heldThisMonth,
+      momentTitle: thisMonth?.title ?? '', momentReason: thisMonth?.why ?? '', momentKind: thisMonth?.kind ?? '', momentConf: thisMonth?.conf ?? '', momentCta: thisMonth?.cta ?? '',
+      momentBg: thisMonth?.bg ?? '', momentSize: thisMonth ? thisMonth.size + 40 : 0
+    };
+  }
+}
+</script>
+</body>
+</html>

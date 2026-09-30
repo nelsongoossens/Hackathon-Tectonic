@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#CFC4C2;--grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#121212}a:hover{color:#FF4B2B}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</helmet>
+<div style="position:relative;min-height:100vh;padding:56px 64px 96px;font-family:'Space Grotesk',sans-serif;color:#121212;box-sizing:border-box">
+<div style="position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none"></div>
+<div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px">
+  <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin-bottom:10px">02 / Home · 390×844</div><div style="font-size:44px;line-height:.98;letter-spacing:-.03em;font-weight:500">Calm shell, one moment</div></div>
+  <nav style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><a href="01 Components.dc.html">01 Components</a><a href="03 Understands.dc.html">03 Understands</a><a href="04 Silence Log.dc.html">04 Silence</a><a href="05 Budgets.dc.html">05 Budgets</a><a href="06 Dashboard.dc.html">06 Dashboard</a></nav>
+</div>
+<div style="position:relative;display:flex;gap:48px;flex-wrap:wrap;align-items:flex-start">
+
+<!-- Home with moment -->
+<div data-screen-label="Home" style="width:390px;height:844px;border-radius:44px;background:#F1ECE8;overflow:hidden;position:relative;box-sizing:border-box;display:flex;flex-direction:column">
+  <div style="display:flex;justify-content:space-between;padding:18px 28px 0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em"><span>09:41</span><span>KBC · Lotte</span></div>
+  <div style="padding:44px 24px 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Total · 2 accounts</div>
+    <div style="font-size:64px;line-height:1;letter-spacing:-.045em;font-weight:500;margin-top:8px">€4,318<span style="font-size:28px;color:#6B6461;letter-spacing:-.02em">.40</span></div>
+  </div>
+  <div style="display:flex;gap:10px;padding:26px 24px 0">
+    <div style="flex:1;border-radius:28px;border:1px solid rgba(18,18,18,.12);padding:16px 18px 18px"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Current</div><div style="font-size:22px;letter-spacing:-.02em;font-weight:500;margin-top:16px">€2,068.40</div></div>
+    <div style="flex:1;border-radius:28px;border:1px solid rgba(18,18,18,.12);padding:16px 18px 18px"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Huis · 41%</div><div style="font-size:22px;letter-spacing:-.02em;font-weight:500;margin-top:16px">€2,250.00</div></div>
+  </div>
+  <div style="display:flex;gap:8px;padding:14px 24px 0"><button style="height:44px;padding:0 20px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:14px;font-weight:500">Pay</button><button style="height:44px;padding:0 20px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px">Transfer</button><button style="height:44px;padding:0 20px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px">Cards</button></div>
+
+  <!-- moment (agent-generated: aura) -->
+  <div style="margin:28px 16px 0;position:relative;border-radius:28px;background:#F1ECE8;border:1px solid rgba(18,18,18,.08);overflow:hidden">
+    <div style="position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#FF4B2B 0%,#FF8A3D 42%,rgba(255,138,61,0) 72%);filter:blur(26px);animation:breathe 7s ease-in-out infinite"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;padding:16px 16px 0;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.8);backdrop-filter:blur(10px);padding:6px 10px;border-radius:999px">Moment · Confirm</span><span style="background:rgba(241,236,232,.8);backdrop-filter:blur(10px);padding:6px 10px;border-radius:999px;color:#6B6461">91%</span></div>
+    <div style="position:relative;margin:36px 10px 10px;padding:16px;border-radius:20px;background:rgba(241,236,232,.8);backdrop-filter:blur(16px)">
+      <div style="font-size:21px;line-height:1.12;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">Your energy bill is €212. Pay it now?</div>
+      <div style="font-size:13px;color:#6B6461;margin-top:8px;line-height:1.4">Due Friday. Balance covers it with €1,840 to spare.</div>
+      <div style="display:flex;gap:8px;margin-top:14px"><button style="flex:1;height:44px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:14px;font-weight:500">Pay €212</button><button style="height:44px;padding:0 16px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px">Not now</button></div>
+    </div>
+  </div>
+
+  <div style="padding:26px 24px 0;flex:1">
+    <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461"><span>Recent</span><span>All</span></div>
+    <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(18,18,18,.08);font-size:15px"><span>Colruyt</span><span style="color:#6B6461">−€64.20</span></div>
+    <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(18,18,18,.08);font-size:15px"><span>De Lijn</span><span style="color:#6B6461">−€2.50</span></div>
+    <div style="display:flex;justify-content:space-between;padding:14px 0;font-size:15px"><span>Salary · Vandenbroucke NV</span><span>+€2,410.00</span></div>
+  </div>
+  <div style="display:flex;justify-content:space-around;padding:12px 24px 22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Home</span><span style="color:#6B6461">Pay</span><span style="color:#6B6461">Understands</span><span style="color:#6B6461">Silence</span></div>
+</div>
+
+<!-- Empty state -->
+<div data-screen-label="Home · empty" style="width:390px;height:844px;border-radius:44px;background:#F1ECE8;overflow:hidden;position:relative;box-sizing:border-box;display:flex;flex-direction:column">
+  <div style="display:flex;justify-content:space-between;padding:18px 28px 0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em"><span>09:41</span><span>KBC · Lotte</span></div>
+  <div style="padding:44px 24px 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461">Total · 2 accounts</div>
+    <div style="font-size:64px;line-height:1;letter-spacing:-.045em;font-weight:500;margin-top:8px">€4,106<span style="font-size:28px;color:#6B6461;letter-spacing:-.02em">.40</span></div>
+  </div>
+  <div style="display:flex;gap:10px;padding:26px 24px 0">
+    <div style="flex:1;border-radius:28px;border:1px solid rgba(18,18,18,.12);padding:16px 18px 18px"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Current</div><div style="font-size:22px;letter-spacing:-.02em;font-weight:500;margin-top:16px">€1,856.40</div></div>
+    <div style="flex:1;border-radius:28px;border:1px solid rgba(18,18,18,.12);padding:16px 18px 18px"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Huis · 41%</div><div style="font-size:22px;letter-spacing:-.02em;font-weight:500;margin-top:16px">€2,250.00</div></div>
+  </div>
+  <div style="display:flex;gap:8px;padding:14px 24px 0"><button style="height:44px;padding:0 20px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:14px;font-weight:500">Pay</button><button style="height:44px;padding:0 20px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px">Transfer</button><button style="height:44px;padding:0 20px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px">Cards</button></div>
+  <div style="margin:28px 16px 0;padding:34px 24px;border-radius:28px;border:1px dashed rgba(18,18,18,.18);text-align:center">
+    <div style="width:10px;height:10px;border-radius:50%;background:#CFC4C2;margin:0 auto 18px"></div>
+    <div style="font-size:19px;line-height:1.2;letter-spacing:-.02em;font-weight:500">Nothing needs you today.</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461;margin-top:12px">7 signals watched · 0 through</div>
+  </div>
+  <div style="padding:26px 24px 0;flex:1">
+    <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461"><span>Recent</span><span>All</span></div>
+    <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(18,18,18,.08);font-size:15px"><span>Luminus</span><span style="color:#6B6461">−€212.00</span></div>
+    <div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(18,18,18,.08);font-size:15px"><span>Colruyt</span><span style="color:#6B6461">−€64.20</span></div>
+    <div style="display:flex;justify-content:space-between;padding:14px 0;font-size:15px"><span>De Lijn</span><span style="color:#6B6461">−€2.50</span></div>
+  </div>
+  <div style="display:flex;justify-content:space-around;padding:12px 24px 22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Home</span><span style="color:#6B6461">Pay</span><span style="color:#6B6461">Understands</span><span style="color:#6B6461">Silence</span></div>
+</div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>

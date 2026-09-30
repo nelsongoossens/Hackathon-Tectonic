@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#CFC4C2;--grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#121212}a:hover{color:#FF4B2B}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</helmet>
+<div style="position:relative;min-height:100vh;padding:56px 64px 96px;font-family:'Space Grotesk',sans-serif;color:#121212;box-sizing:border-box">
+<div style="position:absolute;inset:0;background-image:var(--grain);opacity:.07;pointer-events:none"></div>
+<div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px">
+  <div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin-bottom:10px">01 / Component sheet · the only UI agents may compose from</div>
+    <div style="font-size:44px;line-height:.98;letter-spacing:-.03em;font-weight:500">Moments</div>
+  </div>
+  <nav style="display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><a href="02 Home.dc.html">02 Home</a><a href="03 Understands.dc.html">03 Understands</a><a href="04 Silence Log.dc.html">04 Silence</a><a href="05 Budgets.dc.html">05 Budgets</a><a href="06 Dashboard.dc.html">06 Dashboard</a></nav>
+</div>
+<div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin-bottom:14px">Default · aura = agent-generated · coral helpful/urgent · teal informational</div>
+<div style="position:relative;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+
+<!-- a. one-tap confirm -->
+<div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden;box-sizing:border-box">
+  <div style="position:absolute;right:-70px;top:-90px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#FF4B2B 0%,#FF8A3D 42%,rgba(255,138,61,0) 72%);filter:blur(26px);animation:breathe 7s ease-in-out infinite"></div>
+  <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+  <div style="position:relative;padding:20px 20px 0;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.8);backdrop-filter:blur(10px);padding:6px 10px;border-radius:999px">Confirm · Payments</span><span style="background:rgba(241,236,232,.8);backdrop-filter:blur(10px);padding:6px 10px;border-radius:999px;color:#6B6461">Conf 91%</span></div>
+  <div style="position:relative;margin:56px 12px 12px;padding:20px;border-radius:20px;background:rgba(241,236,232,.78);backdrop-filter:blur(16px)">
+    <div style="font-size:24px;line-height:1.1;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">Your energy bill is €212. Pay it now?</div>
+    <div style="font-size:13px;color:#6B6461;margin-top:10px;line-height:1.4">Due Friday. Balance covers it with €1,840 to spare.</div>
+    <div style="display:flex;gap:8px;margin-top:18px;align-items:center"><button style="flex:1;height:48px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:15px;font-weight:500;cursor:pointer">Pay €212</button><button style="height:48px;padding:0 18px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px;cursor:pointer">Not now</button></div>
+    <div style="display:flex;justify-content:space-between;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Why this? Recurring · 9 months</span><span style="text-decoration:underline;cursor:pointer">Mute</span></div>
+  </div>
+</div>
+
+<!-- b. multiple choice -->
+<div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden">
+  <div style="position:absolute;left:-60px;top:-80px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 48%,rgba(169,216,218,0) 72%);filter:blur(26px);animation:breathe 8s ease-in-out infinite"></div>
+  <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+  <div style="position:relative;padding:20px 20px 0;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.8);backdrop-filter:blur(10px);padding:6px 10px;border-radius:999px">Question · Spending</span><span style="background:rgba(241,236,232,.8);backdrop-filter:blur(10px);padding:6px 10px;border-radius:999px;color:#6B6461">Conf 64%</span></div>
+  <div style="position:relative;margin:56px 12px 12px;padding:20px;border-radius:20px;background:rgba(241,236,232,.78);backdrop-filter:blur(16px)">
+    <div style="font-size:24px;line-height:1.1;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">Grocery spending is up 30%. Is this…</div>
+    <div style="font-size:13px;color:#6B6461;margin-top:10px;line-height:1.4">€612 in September vs €470 average. Two new stores.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:18px"><button style="height:48px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:15px;text-align:left;padding:0 20px;cursor:pointer">A new normal</button><button style="height:48px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:15px;text-align:left;padding:0 20px;cursor:pointer">Temporary</button><button style="height:48px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:15px;text-align:left;padding:0 20px;cursor:pointer">Not sure yet</button></div>
+    <div style="display:flex;justify-content:space-between;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Helps the budget model</span><span style="text-decoration:underline;cursor:pointer">Mute</span></div>
+  </div>
+</div>
+
+<!-- c. slider -->
+<div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden">
+  <div style="position:absolute;right:-40px;bottom:-110px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#FF8A3D 0%,#FF4B2B 40%,rgba(255,75,43,0) 72%);filter:blur(28px);opacity:.7;animation:breathe 7s ease-in-out infinite"></div>
+  <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+  <div style="position:relative;padding:20px 20px 0;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.8);padding:6px 10px;border-radius:999px">Set amount · Savings</span><span style="background:rgba(241,236,232,.8);padding:6px 10px;border-radius:999px;color:#6B6461">Conf 77%</span></div>
+  <div style="position:relative;margin:16px 12px 12px;padding:20px;border-radius:20px;background:rgba(241,236,232,.78);backdrop-filter:blur(16px)">
+    <div style="font-size:24px;line-height:1.1;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">You have €430 unspent this month. Move some to Huis?</div>
+    <div style="font-size:56px;line-height:1;letter-spacing:-.04em;font-weight:500;margin-top:22px">€250</div>
+    <div style="position:relative;height:44px;margin-top:6px;display:flex;align-items:center"><div style="height:2px;width:100%;background:#CFC4C2;border-radius:2px"></div><div style="position:absolute;left:0;height:2px;width:58%;background:#121212"></div><div style="position:absolute;left:calc(58% - 14px);width:28px;height:28px;border-radius:50%;background:#121212;box-shadow:0 0 0 6px #F1ECE8"></div></div>
+    <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6B6461"><span>€0</span><span>€430</span></div>
+    <div style="display:flex;gap:8px;margin-top:18px"><button style="flex:1;height:48px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:15px;font-weight:500;cursor:pointer">Move €250</button><button style="height:48px;padding:0 18px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px;cursor:pointer">Skip</button></div>
+    <div style="display:flex;justify-content:space-between;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Goal: house · 2028</span><span style="text-decoration:underline;cursor:pointer">Mute</span></div>
+  </div>
+</div>
+
+<!-- d. short chat -->
+<div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden">
+  <div style="position:absolute;right:-80px;top:40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%);filter:blur(26px);opacity:.8;animation:breathe 8s ease-in-out infinite"></div>
+  <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+  <div style="position:relative;padding:20px 20px 0;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.8);padding:6px 10px;border-radius:999px">Chat · Mobility</span><span style="background:rgba(241,236,232,.8);padding:6px 10px;border-radius:999px;color:#6B6461">Conf 58%</span></div>
+  <div style="position:relative;margin:16px 12px 12px;display:flex;flex-direction:column;gap:8px">
+    <div style="align-self:flex-start;max-width:86%;padding:14px 16px;border-radius:20px 20px 20px 6px;background:rgba(241,236,232,.85);backdrop-filter:blur(14px);border:1px solid rgba(18,18,18,.08);font-size:15px;line-height:1.35">Your car insurance renews in 12 days at €68/mo. Two comparable quotes are lower.</div>
+    <div style="align-self:flex-end;max-width:80%;padding:14px 16px;border-radius:20px 20px 6px 20px;background:#121212;color:#F1ECE8;font-size:15px;line-height:1.35">How much lower?</div>
+    <div style="align-self:flex-start;max-width:86%;padding:14px 16px;border-radius:20px 20px 20px 6px;background:rgba(241,236,232,.85);backdrop-filter:blur(14px);border:1px solid rgba(18,18,18,.08);font-size:15px;line-height:1.35">€51 and €54. Same cover. I can send both to your inbox.</div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button style="flex:1;height:44px;border-radius:999px;border:0;background:#121212;color:#F1ECE8;font:inherit;font-size:14px;cursor:pointer">Send them</button><button style="height:44px;padding:0 16px;border-radius:999px;border:1px solid #121212;background:transparent;font:inherit;font-size:14px;cursor:pointer">Leave it</button></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 8px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Source: 24 premiums paid</span><span style="text-decoration:underline;cursor:pointer">Mute</span></div>
+  </div>
+</div>
+
+<!-- e. voice reply -->
+<div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden">
+  <div style="position:absolute;left:50%;top:60px;width:300px;height:300px;margin-left:-150px;border-radius:50%;background:radial-gradient(circle,#FF4B2B 0%,#FF8A3D 38%,rgba(255,138,61,0) 70%);filter:blur(30px);opacity:.55;animation:breathe 7s ease-in-out infinite"></div>
+  <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+  <div style="position:relative;padding:20px 20px 0;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="background:rgba(241,236,232,.8);padding:6px 10px;border-radius:999px">Voice · Income</span><span style="background:rgba(241,236,232,.8);padding:6px 10px;border-radius:999px;color:#6B6461">Conf 83%</span></div>
+  <div style="position:relative;margin:16px 12px 12px;padding:20px;border-radius:20px;background:rgba(241,236,232,.8);backdrop-filter:blur(16px)">
+    <div style="font-size:24px;line-height:1.1;letter-spacing:-.02em;font-weight:500;text-wrap:pretty">A €1,420 deposit came from a new sender. What is it?</div>
+    <div style="display:flex;align-items:center;gap:3px;height:56px;margin-top:22px"><span style="width:3px;height:10px;border-radius:2px;background:#121212"></span><span style="width:3px;height:22px;border-radius:2px;background:#121212"></span><span style="width:3px;height:36px;border-radius:2px;background:#121212"></span><span style="width:3px;height:18px;border-radius:2px;background:#121212"></span><span style="width:3px;height:44px;border-radius:2px;background:#121212"></span><span style="width:3px;height:28px;border-radius:2px;background:#121212"></span><span style="width:3px;height:12px;border-radius:2px;background:#121212"></span><span style="width:3px;height:30px;border-radius:2px;background:#121212"></span><span style="width:3px;height:50px;border-radius:2px;background:#121212"></span><span style="width:3px;height:20px;border-radius:2px;background:#121212"></span><span style="width:3px;height:8px;border-radius:2px;background:#6B6461"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span><span style="width:3px;height:8px;border-radius:2px;background:#CFC4C2"></span></div>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:14px"><button style="width:64px;height:64px;border-radius:50%;border:0;background:#121212;cursor:pointer;display:grid;place-items:center"><span style="display:block;width:14px;height:22px;border-radius:7px;background:#F1ECE8"></span></button><div style="font-size:13px;color:#6B6461;line-height:1.4">Hold to answer.<br>Or <span style="text-decoration:underline;color:#121212;cursor:pointer">type instead</span>.</div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Unknown sender · 1st time</span><span style="text-decoration:underline;cursor:pointer">Mute</span></div>
+  </div>
+</div>
+</div>
+
+<div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin:56px 0 14px">Answered · aura settles: small, still, teal</div>
+<div style="position:relative;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+  <div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden;padding:20px;box-sizing:border-box">
+    <div style="position:absolute;right:16px;top:14px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%);filter:blur(14px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Confirm · Payments · Done 14:02</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Energy bill paid. €212 to Luminus.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Trust +1</span><span style="text-decoration:underline;cursor:pointer">Undo</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden;padding:20px;box-sizing:border-box">
+    <div style="position:absolute;right:16px;top:14px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%);filter:blur(14px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Question · Spending · Answered</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Groceries: <span style="border-bottom:2px solid #1F4E5F">temporary</span>. I'll recheck in November.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Model updated</span><span style="text-decoration:underline;cursor:pointer">Change</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden;padding:20px;box-sizing:border-box">
+    <div style="position:absolute;right:16px;top:14px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%);filter:blur(14px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Set amount · Savings · Done</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">€250 moved to Huis. Goal 41% funded.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Trust +1</span><span style="text-decoration:underline;cursor:pointer">Undo</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden;padding:20px;box-sizing:border-box">
+    <div style="position:absolute;right:16px;top:14px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%);filter:blur(14px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Chat · Mobility · Sent</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Two quotes sent. No action taken on your policy.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Follow-up: 10 days</span><span style="text-decoration:underline;cursor:pointer">Open</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#F1ECE8;overflow:hidden;padding:20px;box-sizing:border-box">
+    <div style="position:absolute;right:16px;top:14px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#1F4E5F 0%,#A9D8DA 50%,rgba(169,216,218,0) 72%);filter:blur(14px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461">Voice · Income · Heard</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">"Freelance invoice." Tagged as income · You said.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6B6461"><span>Source: You said</span><span style="text-decoration:underline;cursor:pointer">Fix</span></div>
+  </div>
+</div>
+
+<div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6461;margin:56px 0 14px">Dismissed / muted · aura desaturates to grey, goes still</div>
+<div style="position:relative;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+  <div style="position:relative;width:342px;border-radius:28px;background:#E6E0DD;overflow:hidden;padding:20px;box-sizing:border-box;color:#6B6461">
+    <div style="position:absolute;right:20px;top:18px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle,#8E8683 0%,#B8B0AD 50%,rgba(184,176,173,0) 72%);filter:blur(12px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Confirm · Payments · Muted 30d</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Bill reminders muted. I'll still pay on time if you ask.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Cost logged</span><span style="text-decoration:underline;cursor:pointer;color:#121212">Unmute</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#E6E0DD;overflow:hidden;padding:20px;box-sizing:border-box;color:#6B6461">
+    <div style="position:absolute;right:20px;top:18px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle,#8E8683 0%,#B8B0AD 50%,rgba(184,176,173,0) 72%);filter:blur(12px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Question · Spending · Dismissed</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Noted. Fewer spending questions from now on.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Threshold raised</span><span style="text-decoration:underline;cursor:pointer;color:#121212">Undo</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#E6E0DD;overflow:hidden;padding:20px;box-sizing:border-box;color:#6B6461">
+    <div style="position:absolute;right:20px;top:18px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle,#8E8683 0%,#B8B0AD 50%,rgba(184,176,173,0) 72%);filter:blur(12px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Set amount · Savings · Skipped</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Skipped. Next transfer suggestion in December.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Silence log</span><span style="text-decoration:underline;cursor:pointer;color:#121212">Undo</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#E6E0DD;overflow:hidden;padding:20px;box-sizing:border-box;color:#6B6461">
+    <div style="position:absolute;right:20px;top:18px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle,#8E8683 0%,#B8B0AD 50%,rgba(184,176,173,0) 72%);filter:blur(12px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Chat · Mobility · Left it</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Policy left as is. Insurance topics paused for a year.</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Cost logged</span><span style="text-decoration:underline;cursor:pointer;color:#121212">Unmute</span></div>
+  </div>
+  <div style="position:relative;width:342px;border-radius:28px;background:#E6E0DD;overflow:hidden;padding:20px;box-sizing:border-box;color:#6B6461">
+    <div style="position:absolute;right:20px;top:18px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle,#8E8683 0%,#B8B0AD 50%,rgba(184,176,173,0) 72%);filter:blur(12px);opacity:.7"></div>
+    <div style="position:absolute;inset:0;background-image:var(--grain);opacity:.08;mix-blend-mode:multiply;pointer-events:none"></div>
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase">Voice · Income · Dismissed</div>
+    <div style="position:relative;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:500;margin-top:14px">Left untagged. Marked "inferred: other income".</div>
+    <div style="position:relative;display:flex;justify-content:space-between;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span>Low confidence kept</span><span style="text-decoration:underline;cursor:pointer;color:#121212">Tag</span></div>
+  </div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>
