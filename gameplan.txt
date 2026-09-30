@@ -1,57 +1,71 @@
-### 1. The client model: a picture of the person, not just the account
+KAIROS: THE FULL VISION
+A bank that earns the right to speak
+KBC challenge, Tectonic Hackathon, 30 September 2026
 
-Two tiers. The **facts tier** is what core banking already has: balances, income, transactions, recurring payments, address, age, products held. The **understanding tier** is what nobody stores today: goals, stated constraints, life situation, habits, hobbies, relationships, and attitudes (how they feel about risk, debt, investing).
+This document describes the long-term vision behind the proof of concept. The README documents the current implementation, how to run it and its limitations. Earlier project files call the concept "Moments"; Kairos is the current demo name.
 
-Both live in fixed domains such as income and wealth, housing, mobility, household and dependents, recurring commitments, and goals and constraints. Every record shares the same envelope: the claim, its source (bank data, customer said it, or agent inferred it), a confidence score, the evidence behind it (for example, the six vet payments that suggest a pet), and when it was last confirmed. That envelope is what makes it agent-native. An agent can ask "what do we know about this person's housing, how sure are we, and why?" and get a precise answer.
+The ambition is a bank that understands the person behind the account, notices meaningful changes, and responds at the right moment. More personalization should mean fewer irrelevant interruptions. The relationship improves when the customer can see what the bank understands, correct it, and control when it speaks.
 
-It's also the bitter-lesson answer: a fixed structured envelope with flexible content inside. As models improve, they fill it with richer understanding without anyone redesigning the schema. Constraints that can be made executable are stored twice, once as a goal ("wants to spend under €150/week on groceries") and once as a rule the system can check.
+1. THE CLIENT MODEL: A PICTURE OF THE PERSON
 
-One addition I'd strongly recommend: the customer can see and correct this model on a "what KBC understands about me" screen. It turns a creepy-sounding idea into a trust feature, and it's your GDPR answer.
+The model has two tiers. The facts tier contains information core banking already has: balances, income, transactions, recurring payments, address, age and products held. The understanding tier captures goals, stated constraints, life situation, habits, hobbies, relationships and attitudes toward risk, debt and investing.
 
-### 2. The service graph: everything the bank can do, as a map agents can walk
+Both tiers use domains such as income and wealth, housing, mobility, household and dependents, recurring commitments, and goals and constraints. Every record carries the same envelope: the claim, its source (bank data, customer declaration or agent inference), confidence, supporting evidence, and the dates when it became valid and was last confirmed. An agent can ask what is known about someone's housing, how certain it is, and why, then receive a precise answer.
 
-Every service and sub-step KBC offers is a node: buying a home, a mortgage, car insurance, pet insurance, an address change, savings products. Each node carries four things.
+A fixed structured envelope allows flexible content. Better models can add richer understanding without replacing the entire schema. Where a constraint can be executed, it is represented both as a goal ("keep groceries under EUR 150 per week") and as a deterministic rule.
 
-**Relevance conditions** come in two kinds. Hard ones are deterministic checks against the facts tier, such as "must be 18+" or "must own a car." Soft ones are signals for agents to reason about, such as life stage, income trajectory, and stated goals. This is where "a 16-year-old won't buy a house" lives.
+The customer can inspect the model in a "what the bank understands about me" screen, confirm or reject an inference, and explain a correction. Declared information takes precedence over inference. Evidence of spending must not become a diagnosis or an unsupported sensitive-trait inference. Uncertain beliefs should remain visibly uncertain and should not trigger intrusive suggestions.
 
-**Dependencies** say what each node requires, unlocks, or conflicts with. **The procedure** holds the steps, decision points, forms, legal requirements, and money movements. **The degrees of freedom** are the options, like coverage levels, terms, and amounts.
+Customer visibility and correction are trust features. Production use also requires appropriate consent and lawful processing, retention and deletion controls, access controls, and privacy review; the prototype does not establish regulatory compliance.
 
-Each node also has guardrails: what an agent may suggest itself versus what must go to a human advisor, such as investment advice that falls under MiFID suitability rules. The graph is curated by KBC's domain experts, not generated. It's the bank's expertise made machine-readable, and it's why agent suggestions are correct rather than merely plausible.
+2. THE SERVICE GRAPH: A MAP OF WHAT THE BANK CAN DO
 
-### 3. The agent loop: cheap and deterministic first, smart where it matters
+Services and their sub-steps are curated nodes: buying a home, a mortgage, car insurance, pet insurance, an address change, savings products and practical budgeting help. Each node contains relevance conditions, dependencies, a procedure, degrees of freedom and guardrails.
 
-This is your scalability answer for 2.3 million customers. **Deterministic watchers** run on every event for everyone. They check user-set rules, filter eligibility against the service graph, and detect patterns: a category spending shift, a new recurring payment, a salary change, an address change. They're cheap and predictable. An LLM only wakes up when a watcher fires.
+Hard relevance conditions are deterministic checks against known facts, such as age and product eligibility. Soft conditions are signals for reasoning, including life stage, income trajectory and stated goals. Dependencies describe what a service requires, unlocks or conflicts with. The procedure captures steps, decision points, forms, legal requirements and money movements. Degrees of freedom describe options such as coverage, terms and amounts.
 
-**Sensemaking agents** then update the understanding tier: "recurring vet payments, probably has a pet, medium confidence." **Opportunity agents** walk the service graph starting from whatever changed. They produce candidate *moments*: what to say, why, how confident they are, how urgent it is, and what the customer gains.
+Guardrails distinguish suggestions an agent may make from situations requiring a human advisor. Investment suitability and other regulated decisions require domain-specific controls beyond a conversational model.
 
-Your "€2,000 outside fixed costs" example fits here perfectly. The customer says it in plain language, and an agent compiles it into a deterministic rule the watchers run from then on. The LLM acts as a compiler of intent; plain code does the execution.
+In the full vision, KBC domain experts curate and maintain this graph. The agent explores the bank's explicit expertise rather than inventing products or procedures. The prototype uses a small hand-written slice and demonstrates advisor routing rather than executing banking operations.
 
-### 4. The attention gate: knowing when to shut up
+3. THE AGENT LOOP: DETERMINISTIC FIRST, REASONING WHERE IT HELPS
 
-This is the heart of the pitch. Every candidate moment competes for a limited per-customer budget, and the default outcome is silence. The gate scores each moment roughly as value to the customer × confidence × urgency, minus the cost of interrupting.
+The scale ambition is to support more than 2.3 million customers. Cheap deterministic watchers process events, check customer rules and identify changes: a category spending shift, a new recurring payment, a salary change, an address change or a savings milestone. Eligibility checks remove services that cannot apply.
 
-It keeps two ledgers. The **attention budget** is how much interruption this person tolerates, learned from what they engage with, dismiss, ignore, or mute. The **trust budget** grows with moments that turned out genuinely useful and shrinks with irrelevant or salesy ones. Commercial suggestions cost more trust than pure help, so they only get through once trust is high. A useful test to state out loud to judges: would we show this if KBC earned nothing from it?
+Watcher hits trigger sensemaking. For example, recurring vet payments may support a medium-confidence belief that a customer has a pet. The model records the supporting evidence and preserves uncertainty. Customer corrections constrain subsequent reasoning.
 
-Every suppressed moment goes to a **silence log** with its reason. That makes restraint visible, auditable, and, crucially, demoable.
+Opportunity reasoning explores relevant branches of the service graph and proposes candidate moments: what to say, why it matters, confidence, urgency and customer benefit. The attention gate then decides whether the candidate deserves an interruption.
 
-(Your notes had "a budget fund" and "overboxer" next to attention and trust budget. I read those as the same idea, a limited budget for interruptions. Tell me if you meant something else.)
+Customer intent can become executable without repeatedly consulting an LLM. "Warn me if I spend more than EUR 2,000 a month outside fixed costs" is compiled into a validated JSON rule. Plain code evaluates the rule thereafter. Model output is never executed as code.
 
-### 5. The generative UI: a fixed shell with a living layer
+Watchers, eligibility checks and delivery decisions remain inspectable. Structured outputs, caching and offline fallbacks make the prototype replayable. A production system would add durable event streams, distributed processing, monitoring and measured budgets for model calls. The prototype's synthetic watcher benchmark is evidence about one layer, not proof of full deployment at bank scale.
 
-The static part stays where you expect it: balances, accounts, payments. The dynamic part is a stream of moments that agents compose from a library of safe UI components: a one-tap confirm, a multiple choice, a slider, a short chat, or a voice reply (ElevenLabs is a hackathon partner, so use it). Agents choose and fill components rather than writing arbitrary UI, which keeps things consistent, accessible, and secure.
+4. THE ATTENTION GATE: KNOWING WHEN TO STAY QUIET
 
-For example: "Your grocery spending is up 30% this month. Is this a new normal, a temporary thing, or should I help you get back under €150?" Every answer writes back into the client model as *declared*, which outranks *inferred*, and updates the attention ledgers. That closes the loop: the more someone interacts, the less the bank has to guess, and the less it needs to ask.
+Every candidate competes for a limited per-customer attention budget. Silence is a valid outcome. Conceptually, the gate weighs value to the customer, confidence and urgency against interruption cost.
 
-### How this maps to KBC's questions
+Two ledgers make the relationship explicit. The attention ledger represents how much interruption the customer tolerates, adapting to engagement, dismissal, ignoring and muting. The trust ledger reflects whether earlier moments were useful and relevant. Commercial suggestions require sufficient trust and meaningful customer benefit. The bank's potential revenue is excluded from the customer-value score.
 
-Fit is 30% of your score, so say this explicitly. Signals come from the facts tier plus what customers declare in moments. Recognition by situation, behaviour, and intent comes from the understanding tier. Automatic adaptation comes from the gate and the generative UI. It works across products and channels because the service graph is product-agnostic, and a moment can land in the app, an advisor's queue, or a voice call. And it reaches millions at once because deterministic filters come first and LLMs only run on flagged cases.
+The guiding question is: would this still be useful if the bank earned nothing from it? A weak upsell should not pass merely because it is profitable. A customer-requested alert has a different basis from an unsolicited offer, because the customer explicitly asked for it.
 
-### What to actually build today
+The gate also checks confidence, contradictions, repeated suggestions, muted categories, remaining attention and advisor guardrails. Every suppressed candidate goes to a silence log with a reason. This makes restraint visible and auditable, and allows operators to explain why the bank spoke or stayed quiet.
 
-Scope hard. Use three contrasting synthetic customers (a 24-year-old in their first job, a couple saving for a house, a retiree) with six months of generated transactions each. Build a service graph slice of three or four branches: budgeting rules, home purchase, car insurance, pet insurance.
+5. THE ADAPTIVE UI: A FIXED SHELL WITH A LIVING LAYER
 
-Make the demo a time-lapse. Scrub through the months and watch the client model fill in. The agents propose around 20 moments, the gate lets through three, and the silence log shows why the rest stayed quiet. Then dismiss one moment and show the budget adapt. As a closer, feed the same event (a new recurring vet payment) to two customers and show different outcomes because their trust budgets differ. That's your under-three-minute video.
+Balances, accounts and payments remain in a familiar shell. A dynamic stream of moments is composed from safe UI components: information, one-tap confirmation, choices, sliders and, in the broader vision, short chat or voice replies. Agents select and fill components rather than writing arbitrary UI.
 
-On security, the Aikido audit specifically hunts for IDOR and authorization flaws, and your whole system revolves around a sensitive per-customer model. Scope every read server-side to the authenticated customer, never trust a customer ID sent from the client, and give agents tools already bound to a single customer. Use only synthetic data, per the rules.
+For example: "Your grocery spending has risen this month. Is this a new normal, a temporary change, or should I help you stay under EUR 150 per week?" The response becomes declared information in the client model and can create a deterministic rule. Feedback updates the ledgers, closing the loop between understanding and delivery.
 
-Want me to turn this into a Claude Doc your team can share, or draft the Builderbase description and README from it?
+A moment can appear in the app, be read aloud through a voice channel, or be routed to an advisor with its evidence. The prototype includes ElevenLabs text-to-speech with browser speech fallback; voice input and a real outbound calling workflow are future extensions.
+
+The more the customer chooses to clarify, the less the bank needs to infer or ask again. Accessibility, channel preference and control over commercial contact should remain part of the experience.
+
+6. HOW THE VISION ANSWERS KBC'S CHALLENGE
+
+Signals come from bank facts and customer declarations. Recognition by situation, behaviour and intent comes from an evidence-backed understanding tier. Automatic adaptation comes from feedback, the ledgers, the attention gate and adaptive UI. Cross-product support comes from a shared service graph, with delivery through app, voice or an advisor. The approach to scale starts with deterministic filtering and reserves model reasoning for meaningful changes.
+
+The proof of concept makes these ideas inspectable through three contrasting synthetic customers: Emma, a young customer in her first job; Sam and Noor, a couple saving for a home with lower trust after dismissed offers; and Jef, a retiree who prefers voice. A timeline shows beliefs, proposed moments, gate decisions and the silence log. Customers can answer moments, correct beliefs and set rules. A shared puppy storyline demonstrates how similar events can produce different outcomes because the relationships differ.
+
+Security is part of this architecture. Customer reads and actions are scoped server-side to the authenticated customer, staff tools require the staff role, and moment ownership is checked before interactions or voice synthesis. Agents receive customer-scoped context, while structured rules and allowed UI components keep model output from becoming executable code. The demonstration uses synthetic data; API keys and passwords stay outside the repository.
+
+The goal is a stronger customer relationship: useful help when it matters, understandable decisions, customer control, and justified silence the rest of the time.
