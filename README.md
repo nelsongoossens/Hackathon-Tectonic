@@ -4,7 +4,7 @@ Proof of concept for the **KBC challenge at the Tectonic Hackathon, 30 September
 
 Banks have plenty of customer data. The challenge is knowing which need matters today and when to stay quiet. Kairos builds an explainable, correctable customer model, connects it to a curated service graph, and uses an attention gate to deliver useful moments, route them to an advisor, or record why silence was the better choice. Three synthetic customers demonstrate the approach across budgeting, life changes, insurance and voice.
 
-**Read the [full vision in gameplan.txt](gameplan.txt)** for the customer model, service graph, agent loop, attention and trust budgets, adaptive UI, and the approach to serving millions of customers. The vision extends beyond this prototype; the implementation and limits below describe what runs today.
+**Read the [full vision in vision.txt](vision.txt)** for the customer model, service graph, agent loop, attention and trust budgets, adaptive UI, and the approach to serving millions of customers. The vision extends beyond this prototype; the implementation and limits below describe what runs today.
 
 ## How it addresses the KBC challenge
 
