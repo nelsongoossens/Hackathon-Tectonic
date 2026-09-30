@@ -9,6 +9,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "selftest": "tsx scripts/selftest.ts",
+    "test:security": "tsx scripts/securitytest.ts",
     "scale": "tsx scripts/scale.ts",
     "warm": "tsx scripts/warm.ts"
   },
@@ -16,6 +17,7 @@
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "playwright": "^1.63.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },

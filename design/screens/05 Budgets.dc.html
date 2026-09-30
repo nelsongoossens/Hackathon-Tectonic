@@ -50,44 +50,6 @@ a{color:#121212}a:hover{color:#FF4B2B}
 </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:600}}">
-class Component extends DCLogic {
-  state = { attn: 64, trust: 72, shownA: 64, shownT: 72, last: 'Nothing has happened yet. Attention refills daily; trust moves only when you respond.' };
-  tween() {
-    clearInterval(this._t);
-    this._t = setInterval(() => {
-      const { attn, trust, shownA, shownT } = this.state;
-      const na = shownA + (attn - shownA) * 0.12, nt = shownT + (trust - shownT) * 0.12;
-      if (Math.abs(na - attn) < 0.3 && Math.abs(nt - trust) < 0.3) { clearInterval(this._t); this.setState({ shownA: attn, shownT: trust }); }
-      else this.setState({ shownA: na, shownT: nt });
-    }, 30);
-  }
-  apply(da, dt, last) {
-    const c = v => Math.max(0, Math.min(100, v));
-    this.setState(s => ({ attn: c(s.attn + da), trust: c(s.trust + dt), last }), () => this.tween());
-  }
-  componentWillUnmount() { clearInterval(this._t); }
-  ring(pct, color) {
-    return `conic-gradient(${color} ${pct}%, rgba(18,18,18,.08) ${pct}% 100%)`;
-  }
-  renderVals() {
-    const { shownA, shownT, attn, trust } = this.state;
-    return {
-      attnRing: this.ring(shownA, shownA < 25 ? '#FF4B2B' : '#121212'),
-      trustRing: this.ring(shownT, '#1F4E5F'),
-      attnLabel: Math.round(shownA) + '%',
-      trustLabel: Math.round(shownT) + '%',
-      attnNote: attn < 25 ? 'Nearly spent · gate tightens' : attn < 55 ? 'Draining · fewer moments' : 'Rested · gate open',
-      trustNote: trust < 40 ? 'Low · confirm-only' : trust < 70 ? 'Building' : 'High · can act',
-      explain: this.state.last,
-      onShow: () => this.apply(-12, 0, 'A moment was shown. Each interruption costs attention, whether or not you respond.'),
-      onAccept: () => this.apply(0, 6, 'You accepted. Trust rises, and the agent may propose slightly bolder moments.'),
-      onDismiss: () => this.apply(-4, -9, 'You dismissed. Trust drops and the gate raises its threshold for this topic.'),
-      onQuietDay: () => this.apply(20, 2, 'A quiet day. Attention refills; staying silent earns a little trust too.'),
-      onReset: () => { this.setState({ attn: 64, trust: 72, last: 'Reset.' }, () => this.tween()); }
-    };
-  }
-}
-</script>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:600}}"></script>
 </body>
 </html>

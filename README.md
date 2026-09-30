@@ -51,7 +51,10 @@ Other scripts:
 npm run selftest                        # replays all customers offline and checks storylines + invariants
 npm run scale -- --customers 100000     # watcher throughput and a projection to 2.3M customers
 npm run typecheck
+npm run test:security                   # preview injection + voice-cache regressions
 ```
+
+The security browser tests use installed Microsoft Edge on Windows and Playwright Chromium elsewhere (`npx playwright install chromium`). Set `PLAYWRIGHT_CHANNEL` to select another installed browser channel.
 
 ## Demo path (≈3 min)
 1. Control room → Emma → drag the timeline to March → **▶ Play**. Watch the client model fill in and the counters run: events → watcher hits → LLM calls → candidates → shown.
@@ -66,6 +69,8 @@ npm run typecheck
 - Every state-changing request checks `Origin`. All bodies are validated with zod, with length limits.
 - LLM output is schema-constrained and never executed: rules are a JSON DSL, and the UI is a whitelisted component library rendered as text (no raw HTML). Customer text is passed to the model as data.
 - TTS only reads text of the caller's own moments (no arbitrary text, which protects credits). LLM, TTS and scale endpoints are rate-limited.
+- TTS cache filenames are SHA-256 hashes. Cache reads reject symbolic links and linked directories; writes use exclusive creation so existing files cannot be overwritten through a link.
+- `design/screens/support.js` renders the local design previews from DOM nodes using allowed tags, attributes, and text bindings. The two interactive previews use checked-in JavaScript classes. The preview runtime has no string evaluation, raw HTML insertion, HTTP fetches, arbitrary imports, or live script-update API. Navigation is limited to the bundled previews; the font stylesheet URL is fixed.
 - Security headers: `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, COOP. Secrets live in `.env.local` (gitignored).
 
 ## Unfinished / honest limits

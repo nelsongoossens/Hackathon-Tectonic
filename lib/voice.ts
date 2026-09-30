@@ -5,7 +5,26 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-const AUDIO_DIR = path.join(process.cwd(), ".data", "audio");
+const AUDIO_DIR = path.join(fs.realpathSync(process.cwd()), ".data", "audio");
+
+/** Cache entries must be regular files in the actual cache directory, never links. */
+function readCachedAudio(file: string): Buffer | null {
+  let fd: number | undefined;
+  try {
+    if (fs.realpathSync(AUDIO_DIR) !== AUDIO_DIR) return null;
+    const entry = fs.lstatSync(file);
+    if (!entry.isFile()) return null;
+    fd = fs.openSync(file, fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW ?? 0));
+    const opened = fs.fstatSync(fd);
+    // Also protect platforms without O_NOFOLLOW against a replaced entry.
+    if (!opened.isFile() || opened.dev !== entry.dev || opened.ino !== entry.ino) return null;
+    return fs.readFileSync(fd);
+  } catch {
+    return null; // Missing, unsafe, or unreadable entries are cache misses.
+  } finally {
+    if (fd !== undefined) fs.closeSync(fd);
+  }
+}
 
 export function voiceEnabled(): boolean {
   return Boolean(process.env.ELEVENLABS_API_KEY);
@@ -18,9 +37,8 @@ export async function synthesize(text: string): Promise<Buffer | null> {
   const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
   const hash = createHash("sha256").update(`${voiceId}|${model}|${text}`).digest("hex").slice(0, 32);
   const file = path.join(AUDIO_DIR, `${hash}.mp3`);
-  try {
-    return fs.readFileSync(file);
-  } catch { /* not cached */ }
+  const cached = readCachedAudio(file);
+  if (cached) return cached;
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
     method: "POST",
     headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
@@ -33,8 +51,11 @@ export async function synthesize(text: string): Promise<Buffer | null> {
   }
   const buf = Buffer.from(await res.arrayBuffer());
   try {
-    fs.mkdirSync(AUDIO_DIR, { recursive: true });
-    fs.writeFileSync(file, buf);
+    fs.mkdirSync(AUDIO_DIR, { recursive: true, mode: 0o700 });
+    if (fs.realpathSync(AUDIO_DIR) === AUDIO_DIR) {
+      // Exclusive creation cannot overwrite an existing file or follow a link.
+      fs.writeFileSync(file, buf, { flag: "wx", mode: 0o600 });
+    }
   } catch { /* cache is best effort */ }
   return buf;
 }
